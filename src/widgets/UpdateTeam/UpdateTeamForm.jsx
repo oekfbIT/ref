@@ -41,7 +41,7 @@ const UpdateTeamForm = ({ teamID }) => {
                 const response = await apiService.get(`/teams/updateUser/${teamID}/${newEmail}`);
                 if (response) {
                     console.log('Email updated successfully!');
-                    navigate('/kader');  // Redirect to /teams after successful update
+                    navigate('/matches');  // Redirect to /teams after successful update
                 }
             } else {
                 toast.info('No changes were made.');

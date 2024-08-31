@@ -70,7 +70,7 @@ const LoginForm = () => {
             message.success("Login successful");
 
             // Redirect to the appropriate page based on user type or role
-            navigate("/kader"); // Assuming "/kader" is the main page for teams
+            navigate("/matches"); // Assuming "/kader" is the main page for teams
         } else {
             message.error(result.message);
         }

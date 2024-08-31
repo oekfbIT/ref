@@ -55,7 +55,7 @@ const SetTrainerForm = ({ teamID }) => {
             const response = await apiServiceRef.current.patch(`/teams/${teamID}`, updatedTeam);
             if (response) {
                 console.log('Trainer updated successfully!');
-                navigate('/kader');  // Redirect to team overview or desired page
+                navigate('/matches');  // Redirect to team overview or desired page
             }
         } catch (error) {
             console.log('Failed to update the trainer: ' + error);

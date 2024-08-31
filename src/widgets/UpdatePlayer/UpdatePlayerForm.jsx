@@ -78,7 +78,7 @@ const UpdatePlayerForm = ({ playerId }) => {
             console.log('API response:', response);
             if (response) {
                 setPlayer(response);
-                navigate('/kader');
+                navigate('/matches');
             }
         } catch (error) {
             console.log('Failed to update the player information.');

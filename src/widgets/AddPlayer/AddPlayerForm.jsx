@@ -63,7 +63,7 @@ const AddPlayerForm = ({ teamID }) => {
             const response = await apiService.post('/players', newPlayer);
             if (response) {
                 console.log('Player added successfully!');
-                navigate('/kader');  // Redirect to /kader after successful addition
+                navigate('/matches');  // Redirect to /kader after successful addition
             }
         } catch (error) {
             console.log('Failed to add the player.   :' + error);
