@@ -1,0 +1,35 @@
+.kaderGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Default: 4 columns */
+  gap: 30px;
+  padding: 16px;
+  width: 100%; /* Ensures grid takes full width of its container */
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for large tablets or small desktops */
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr; /* 1 column for mobile devices */
+  }
+}
+
+.card {
+  width: 100%; /* Each card takes the full width of its grid column */
+  height: auto; /* Allow height to adjust based on content */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card {
+  width: 100%; /* Each card takes the full width of its grid column */
+  height: 460px; /* Fixed height for the player info card */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

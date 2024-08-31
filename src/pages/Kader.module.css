@@ -1,0 +1,62 @@
+/* FianzenList.module.css */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 20px;
+    gap: 10px;
+    text-align: left;
+}
+
+.header {
+    background-color: #171A1A;
+    font-weight: bold;
+    color: orange;
+}
+
+.row:nth-child(even) {
+    background-color: #24292B; /* Dark background for even rows */
+    padding: 10px;
+}
+
+.row:nth-child(odd) {
+    background-color: #24292B; /* Slightly lighter for odd rows */
+}
+
+.cell {
+    border-bottom: 1px solid #444; /* Subtle border between rows */
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+.infoText {
+    margin-bottom: 16px;
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: bold;
+    color: white;
+}
+.sub {
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 30px;
+    font-weight: bold;
+    color: orange;
+}
+.lightH {
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 30px;
+    font-weight: bold;
+    color: orange;
+}
+.guthaben {
+    margin-bottom: 16px;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: bold;
+    color: white;
+}
+

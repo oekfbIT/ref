@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  coreapp:
+    container_name: refsection
+    build: .
+    ports:
+      - "6000:6000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - SKIP_PREFLIGHT_CHECK=true
+      - PORT=6000

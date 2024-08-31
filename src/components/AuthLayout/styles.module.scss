@@ -1,0 +1,142 @@
+.container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 20px;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+
+  h1 {
+    font-size: 1.625rem;
+    line-height: 1.5;
+    color: #ffffff;
+  }
+}
+
+.form {
+  max-width: 370px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  background: #111312;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 8px rgba(33, 33, 33, 0.1);
+  color: #e0e0e0;
+
+  input.field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #888888;
+    border-radius: 4px;
+    background: #000000;
+    color: #e0e0e0;
+    font-size: 1rem;
+
+    &::placeholder {
+      color: #888888;
+    }
+  }
+
+  input.field--error {
+    border-color: red;
+  }
+
+  .btn {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &--sm {
+      font-size: 0.875rem;
+    }
+
+    &:hover {
+      background: #0056b3;
+    }
+  }
+
+  .text-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &--sm {
+      font-size: 0.875rem;
+    }
+
+    &:hover {
+      color: #0056b3;
+    }
+  }
+
+  label {
+    color: #e0e0e0;
+  }
+}
+
+.cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &.light,
+  &.dark {
+    background: transparent;
+  }
+
+  &_logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--widget);
+    border-radius: 8px;
+    position: relative;
+  }
+}
+
+// tablet landscape
+@media screen and (min-width: 1024px) {
+  .container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0;
+  }
+
+  .cover {
+    &.light {
+      background: #ffffff;
+    }
+
+    &.dark {
+      background: #111312;
+      box-shadow: 0 1px 8px rgba(33, 33, 33, 0.1);
+    }
+  }
+}
+
+// desktop
+@media screen and (min-width: 1366px) {
+  .cover_logo {
+    max-width: 60%;
+    max-height: 25%;
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .cover_logo {
+    max-width: 55%;
+    max-height: 30%;
+  }
+}
