@@ -1,7 +1,7 @@
 class AuthService {
     constructor() {
-        // this.baseURL = 'https://api.oekfb.eu/';
-        this.baseURL = "http://localhost:8080";
+        this.baseURL = 'https://api.oekfb.eu/';
+        // this.baseURL = "http://localhost:8080";
     }
 
     async login(email, password) {
