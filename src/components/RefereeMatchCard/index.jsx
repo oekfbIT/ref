@@ -21,37 +21,37 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
 
     return (
         <Spring className={`${styles.container} h-100`} type="slideUp" index={index}>
-            <div className="card-padded d-flex flex-column g-20"
-                 style={{ paddingBottom: variant !== 'extended' ? 'var(--card-padding)' : 10 }}>
+            <div
+                className={"card-padded d-flex flex-column g-20"}
+                style={{ paddingBottom: variant !== 'extended' ? 'var(--card-padding)' : 10, cursor: 'pointer' }} // Added cursor style here
+                onClick={() => (window.location.href = `/matches/${match.id}`)}
+            >
                 <div className="d-flex align-items-center justify-content-between p-relative">
-                    <img className="club-logo" src={homeTeam.logo || ''} alt={homeTeam.name || 'Home Team'}/>
-                    <Score team1={match.score.home || 0} team2={match.score.away || 0} variant="alt"/>
+                    <img className="club-logo" src={homeTeam.logo || ''} alt={homeTeam.name || 'Home Team'} />
+                    <Score team1={match.score.home || 0} team2={match.score.away || 0} variant="alt" />
                     <img className="club-logo" src={awayTeam.logo || ''} alt={awayTeam.name || 'Away Team'} />
                 </div>
                 <div className="d-flex justify-content-between g-30">
-                    <div style={{minWidth: 0, maxWidth: "100px"}}>
+                    <div style={{ minWidth: 0, maxWidth: "100px" }}>
                         <h5>{homeTeam.name || 'Home Team'}</h5>
                     </div>
-                    <div className="text-right" style={{minWidth: 0, maxWidth: "100px", textAlign: "right"}}>
+                    <div className="text-right" style={{ minWidth: 0, maxWidth: "100px", textAlign: "right" }}>
                         <h5>{awayTeam.name || 'Away Team'}</h5>
                     </div>
                 </div>
 
                 <div className="d-flex justify-content-center g-30">
-                    <img className="club-dress" src={match.home_blanket.dress || ''}
-                         alt={homeTeam.name || 'Home Team'}/>
+                    <img className="club-dress" src={match.home_blanket.dress || ''} alt={homeTeam.name || 'Home Team'} />
 
                     <div className="d-flex flex-column justify-content-center g-5">
-                        <h4 style={{color: "orange", textAlign: "center"}}
-                            className="text-12 text-overflow">Spielplatzt:</h4>
+                        <h4 style={{ color: "orange", textAlign: "center" }} className="text-12 text-overflow">Spielplatzt:</h4>
 
-                        <h2 style={{textAlign: "center", maxWidth: "150px", height: "auto"}}
-                            className="text-12 text-overflow">{match.details.location || 'Nicht Zugeornet'}, {formatDate(match.details.date) || 'Nicht Zugeornet'}</h2>
-
+                        <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
+                            {match.details.location || 'Nicht Zugeornet'}, {formatDate(match.details.date) || 'Nicht Zugeornet'}
+                        </h2>
                     </div>
 
-                    <img className="club-dress" src={match.away_blanket.dress || ''}
-                         alt={homeTeam.name || 'Home Team'}/>
+                    <img className="club-dress" src={match.away_blanket.dress || ''} alt={homeTeam.name || 'Home Team'} />
                 </div>
 
             </div>

@@ -10,73 +10,44 @@ import player5 from '@assets/players/5.webp';
 import player12 from '@assets/players/12.webp';
 import player1 from '@assets/players/1.webp';
 
-const pitch = [
-    {
-        number: 14,
-        avatar: player14,
-        role: 'left-winger',
-        name: 'Casemiro'
-    },
+const defaults = [
     {
         number: 9,
         avatar: player9,
         role: 'center-forward',
-        name: 'Benzema'
-    },
-    {
-        number: 11,
-        avatar: player11,
-        role: 'right-winger',
-        name: 'Bale'
+        name: 'center'
     },
     {
         number: 8,
         avatar: player8,
         role: 'center-midfielder-left',
-        name: 'Kross'
-    },
-    {
-        number: 25,
-        avatar: player25,
-        role: 'center-midfielder-center',
-        name: 'Junior'
+        name: 'center-left'
     },
     {
         number: 10,
         avatar: player10,
         role: 'center-midfielder-right',
-        name: 'Modric'
+        name: 'center-right'
     },
-    {
-        number: 2,
-        avatar: player2,
-        role: 'full-back-left',
-        name: 'Carvajal'
-    },
+
     {
         number: 4,
         avatar: player4,
         role: 'center-back-left',
-        name: 'Ramos'
+        name: 'center-back-left'
     },
     {
         number: 5,
         avatar: player5,
         role: 'center-back-right',
-        name: 'Varane'
-    },
-    {
-        number: 12,
-        avatar: player12,
-        role: 'full-back-right',
-        name: 'Marcelo'
+        name: 'center-back-right'
     },
     {
         number: 1,
         avatar: player1,
         role: 'keeper',
-        name: 'Courtois'
+        name: 'keeper'
     }
 ]
 
-export default pitch
+export default defaults

@@ -36,6 +36,7 @@ import UpdateTeamPage from "@pages/UpdateTeam";
 import Vertrag from "@pages/Vertrag";
 import Finanzen from "@pages/Finanzen";
 import MatchesOverview from "@pages/MatchesOverview";
+import MatchDetailPage from "@pages/MatchDetailPage";
 
 // Lazy-loaded pages
 const ClubSummary = lazy(() => import('@pages/ClubSummary'));
@@ -120,10 +121,11 @@ const App = () => {
                                                 <Route path="/blank" element={<PrivateRoute><Blank /></PrivateRoute>} />
                                                 <Route path="/matches" element={<PrivateRoute><MatchesOverview /></PrivateRoute>} />
                                                 <Route path="/office/finanzen" element={<PrivateRoute><Finanzen /></PrivateRoute>} />
-
+                                                <Route path="/matches/:id" element={<PrivateRoute><MatchDetailPage /></PrivateRoute>} />
 
 
                                                 <Route path="/game-summary" element={<PrivateRoute><GameSummary /></PrivateRoute>} />
+                                                <Route path="/club-summary" element={<PrivateRoute><ClubSummary /></PrivateRoute>} />
                                                 <Route path="/championships" element={<PrivateRoute><Championships /></PrivateRoute>} />
                                                 <Route path="/league-overview" element={<PrivateRoute><LeagueOverview /></PrivateRoute>} />
                                                 <Route path="/fans-community" element={<PrivateRoute><FansCommunity /></PrivateRoute>} />

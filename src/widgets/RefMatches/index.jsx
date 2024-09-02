@@ -68,7 +68,10 @@ const RefMatches = () => {
                     <ScrollContainer height={0}>
                         <div className={`${styles.scroll_track} ${styles[direction]} track d-flex flex-column g-20`}>
                             {filteredMatches.map((match, index) => (
-                                <RefereeMatchCard match={match} index={index} key={index} />
+                                <RefereeMatchCard
+                                    match={match}
+                                    index={index}
+                                    key={index} />
                             ))}
                         </div>
                     </ScrollContainer>

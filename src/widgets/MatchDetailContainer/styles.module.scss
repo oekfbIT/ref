@@ -1,0 +1,151 @@
+/* styles.module.scss */
+.card {
+    padding: var(--card-padding);
+    background-color: var(--widget-dark);
+}
+
+.grid {
+    display: grid;
+    padding: 30px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.cardColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.middleCol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.clubLogo {
+    width: 80px;
+    height: auto;
+}
+.clubDress {
+    width: auto;
+    height: 150px;
+}
+
+.teamName {
+    max-width: 100px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card {
+        height: auto;
+        padding: 20px;
+    }
+}
+
+//
+
+// views.module.scss
+.viewContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+    //background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+// styles.module.scss
+
+.card {
+    padding: 20px;
+    background-color: var(--widget-dark);
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.matchDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: var(--background-light);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.teamInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.teamLogo {
+    width: 100px;
+    height: auto;
+    margin-top: 10px;
+}
+
+.scoreInfo {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 10px 30px;
+    border-radius: 5px;
+    margin: 0px 10px;
+}
+
+.btnGreen {
+    padding: 10px 30px;
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    margin: 0px 10px;
+}
+
+.btnOrange {
+    padding: 10px 30px;
+    background-color: orange;
+    font-weight: bold;
+    color: black;
+    border-radius: 5px;
+    margin: 0px 10px;
+}
+
+.stopwatchContainer {
+    text-align: center;
+    padding: 1rem; // Optional: Adjust padding as needed
+}
+
+.counter {
+    font-size: 2rem; // Example styling, adjust as needed
+    font-weight: bold;
+    color: white;
+}
+
+.counterLbl {
+    font-size: .75rem; // Example styling, adjust as needed
+    margin-bottom: 15px;
+    font-weight: normal;
+    color: white;
+}

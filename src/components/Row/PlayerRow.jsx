@@ -1,6 +1,6 @@
 // styling
 import styled from 'styled-components/macro';
-
+import styles from "./styles.module.scss";
 // components
 import Spring from '@components/Spring';
 import LazyImage from '@components/LazyImage';
@@ -42,9 +42,9 @@ const PlayerRow = ({player, index}) => {
 
     return (
         <Spring index={index} type="slideUp">
-            <StyledPlayerRow className={`${direction} reverse label h6`}>
+            <StyledPlayerRow className={`${direction} reverse label h5`}>
                 <div>
-                    <LazyImage className="media" src={player.avatar} alt={player.name} data-captain={player.isCaptain}/>
+                    <LazyImage className={styles.playerImg} src={player.image} alt={player.name} data-captain={player.isCaptain}/>
                 </div>
                 <div className="main d-flex align-items-center justify-content-between">
                     {player.name} ({player.number})

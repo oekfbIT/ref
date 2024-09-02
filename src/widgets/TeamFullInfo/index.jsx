@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 // components
 import Spring from '@components/Spring';
 import ClubFullInfo from '@components/ClubFullInfo';
-import PlayerRow from '@components/PlayerRow';
+import PlayerRow from '@components/Row/PlayerRow';
 import Lineups from '@components/Lineups';
 
 // utils
@@ -33,7 +33,7 @@ const TeamFullInfo = ({id}) => {
     return (
         <Spring className={`${styles.container} card`}>
             <div className="d-flex flex-column g-20">
-                <ClubFullInfo club={club}/>
+                {/*<ClubFullInfo club={club}/>*/}
                 <div className="d-flex flex-column g-1">
                     {
                         dataArr.map((player, index) => (

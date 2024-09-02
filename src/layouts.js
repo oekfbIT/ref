@@ -529,6 +529,18 @@ const layouts = {
             {i: 'month_matches', x: 0, y: 0, w: 2, h: 1},
         ]
     },
+    matchDetail: {
+        xl: [
+            {i: 'container', x: 1, y: 0, w: 2, h: 1},
+        ],
+        lg: [
+            {i: 'container', x: 0.5, y: 0, w: 2, h: 1},
+        ],
+        md: [
+            {i: 'container', x: 0, y: 0, w: 2, h: 1},
+        ]
+    },
+
 
 }
 
