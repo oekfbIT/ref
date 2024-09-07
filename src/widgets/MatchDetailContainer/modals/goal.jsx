@@ -91,8 +91,8 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                                     alignItems: 'center'
                                 }}
                                 onClick={() => handleTeamSelect('home')}>
-                                <img src={match?.home_blanket?.logo} alt={match?.home_blanket?.name} style={{ width: '100%', height: '80%' }} />
-                                <span style={{ textAlign: 'center' }}>{match?.home_blanket?.name}</span>
+                                <img className={styles.logo} src={match?.home_blanket?.logo} alt={match?.home_blanket?.name} style={{ width: '100%', height: '80%' }} />
+                                <span style={{ textAlign: 'center', marginTop: "15px"}}>{match?.home_blanket?.name}</span>
                             </div>
 
                             <div
@@ -108,8 +108,8 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                                     alignItems: 'center'
                                 }}
                                 onClick={() => handleTeamSelect('away')}>
-                                <img src={match?.away_blanket?.logo} alt={match?.away_blanket?.name} style={{ width: '100%', height: '80%' }} />
-                                <span style={{ textAlign: 'center' }}>{match?.away_blanket?.name}</span>
+                                <img className={styles.logo} src={match?.away_blanket?.logo} alt={match?.away_blanket?.name} style={{ width: '100%', height: '80%' }} />
+                                <span style={{ textAlign: 'center', marginTop: "15px" }}>{match?.away_blanket?.name}</span>
                             </div>
                         </div>
 
