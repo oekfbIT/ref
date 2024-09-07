@@ -326,7 +326,7 @@ const RefDetailContainer = ({ id }) => {
 
             <Modal open={noShowModalOpen} onClose={() => setNoShowModalOpen(false)}>
                 <Box className={styles.modalContent}>
-                    <h3>Welche Mannschaft hat das Spiel Gewonnen?</h3>
+                    <h4>Welche Mannschaft hat das Spiel Gewonnen?</h4>
                     <div className={styles.grid2}>
                         <div>
                             <img className={styles.clubLogo} src={homeTeam.logo || ''} alt={homeTeam.name || 'Home Team'} style={{ maxWidth: '150px' }} />

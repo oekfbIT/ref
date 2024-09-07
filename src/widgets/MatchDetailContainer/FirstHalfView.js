@@ -96,6 +96,10 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
         }
     };
 
+    const logPlayer = () => {
+       console.log("Pressing on Player")
+    };
+
     const handleYellowConfirm = async (selectedPlayer) => {
         try {
             // Call the addYellowCard method and wait for its completion
@@ -149,7 +153,7 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
 
             <PregameView
                 match={match}
-                onPlayerClick={null}
+                onPlayerClick={logPlayer}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
             />
