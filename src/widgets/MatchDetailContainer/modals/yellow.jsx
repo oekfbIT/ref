@@ -12,6 +12,7 @@ const YellowCardModal = ({ open, onClose, onConfirm, players = [] }) => {
     const handleConfirm = () => {
         if (selectedPlayer) {
             onConfirm(selectedPlayer);
+            setSelectedPlayer(null)
             onClose();
         }
     };

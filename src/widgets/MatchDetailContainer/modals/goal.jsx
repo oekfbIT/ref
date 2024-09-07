@@ -32,6 +32,8 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
         if (selectedPlayer && selectedTeam) {
             console.log("Confirming selection:", { player: selectedPlayer, team: selectedTeam });
             onConfirm(selectedPlayer, selectedTeam);  // Pass "home" or "away"
+            setSelectedTeam(null)
+            setSelectedPlayer(null)
             onClose();
         } else {
             console.error("Unable to confirm, player or team is missing.");
