@@ -223,10 +223,14 @@ const RefDetailContainer = ({ id }) => {
         setAbbruchModal(true);
     };
 
+    const cancelHandleAbbruch = () => {
+        setAbbruchModal(false);
+    };
     const executeAbbruch = async () => {
         try {
             await matchController.spielAbbruch(match.id);
             fetchMatch()
+            setAbbruchModal(false)
         } catch (error) {
             console.error('Failed to Spielabrruch:', error);
         }
@@ -361,14 +365,24 @@ const RefDetailContainer = ({ id }) => {
 
             <Modal open={abbruchModalOpen} onClose={() => setNoShowModalOpen(false)}>
                 <Box className={styles.modalContent}>
-                    <h4 >Bestätigen sie das sie dieses Spiel Abbrechen wollen?</h4>
+
+                    <h4>Bestätigen sie das sie dieses Spiel Abbrechen wollen?</h4>
                     <p>Diese Aktion kann nicht wieder hergestellt werden!</p>
-                    <button
-                        className={styles.btnOrange}
-                        onClick={executeAbbruch}
-                    >
-                        Spiel Abbrechen
-                    </button>
+
+                    <div className={styles.grid}>
+                        <button
+                            className={styles.btnOrange}
+                            onClick={executeAbbruch}
+                        >
+                            Spiel Abbrechen
+                        </button>
+                        <button
+                            className={styles.btnGreen}
+                            onClick={cancelHandleAbbruch}
+                        >
+                            Spiel Fortsetzen
+                        </button>
+                    </div>
                 </Box>
             </Modal>
 

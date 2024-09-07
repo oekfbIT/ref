@@ -21,6 +21,10 @@ const SecondHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => 
     const handleOpenYellowRedCard = () => setYellowRedCardOpen(true);
     const handleOpenGoal = () => setGoalOpen(true);
 
+    const logPlayer = () => {
+        console.log("Pressing on Player")
+    };
+
     const handleGoalConfirm =  async (selectedPlayer, scoreTeam) => {
         try {
             // Call the addYellowCard method and wait for its completion
@@ -131,25 +135,25 @@ const SecondHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => 
             <div className={styles.grid3}>
                 <div className={styles.gridItem} onClick={handleOpenRedCard}>
                     <img src="https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2Ficons%2Frot.png?alt=media&token=bdd39008-c39d-4928-a9ed-74c4fe764c2f" alt="Red Card" />
-                    <p>Red Card</p>
+                    <p>Rote Karte</p>
                 </div>
                 <div className={styles.gridItem} onClick={handleOpenYellowCard}>
                     <img src="https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2Ficons%2Fgeld.png?alt=media&token=ff324f73-1e7e-4dba-aca9-735944a33869" alt="Yellow Card" />
-                    <p>Yellow Card</p>
+                    <p>Gelbe Karte</p>
                 </div>
                 <div className={styles.gridItem} onClick={handleOpenYellowRedCard}>
                     <img src="https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2Ficons%2Fgeldrot.png?alt=media&token=c9044e5e-0357-46a3-8931-b89c58d45b33" alt="Yellow-Red Card" />
-                    <p>Yellow-Red Card</p>
+                    <p>Gelb-Rote Karte</p>
                 </div>
                 <div className={styles.gridItem} onClick={handleOpenGoal}>
                     <img src="https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2Ficons%2Ftor.png?alt=media&token=cd8e26a5-bdd8-41a4-a47a-f1a2a22a84bd" alt="Add Goal" />
-                    <p>Add Goal</p>
+                    <p>Tor</p>
                 </div>
             </div>
 
             <PregameView
                 match={match}
-                onPlayerClick={null}
+                onPlayerClick={logPlayer}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
             />

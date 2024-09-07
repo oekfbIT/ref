@@ -72,10 +72,10 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                 {step === 2 && (
                     <>
                         <div style={{ backgroundColor: "black" }}>
-                            <button style={{ marginBottom: "30px" }} onClick={handleBack}>Zur Spielerauswahl</button>
+                            <button style={{ marginBottom: "30px", textDecoration: "underline", color:"orange" }} onClick={handleBack}>Zurück zur Spielerauswahl</button>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '50px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '50px', width: "70%" }}>
                             <div
                                 style={{
                                     width: '80px',
