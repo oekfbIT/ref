@@ -37,6 +37,7 @@ import Vertrag from "@pages/Vertrag";
 import Finanzen from "@pages/Finanzen";
 import MatchesOverview from "@pages/MatchesOverview";
 import MatchDetailPage from "@pages/MatchDetailPage";
+import {MinuteProvider} from "@widgets/MatchDetailContainer/MinuteContext";
 
 // Lazy-loaded pages
 const ClubSummary = lazy(() => import('@pages/ClubSummary'));
@@ -94,59 +95,61 @@ const App = () => {
         <CacheProvider value={cacheRtl}>
             <MuiThemeProvider theme={muiTheme}>
                 <SidebarProvider>
-                    <ThemeProvider theme={{ theme: theme }}>
-                        <ThemeStyles />
-                        <ToastContainer theme={theme} autoClose={2500} position={direction === 'ltr' ? 'top-right' : 'top-left'} />
-                        <StyleSheetManager stylisPlugins={plugins}>
-                            <div className={`app ${isAuthRoute ? 'fluid' : ''}`} ref={appRef}>
-                                <ScrollToTop />
-                                {!isAuthRoute && (
-                                    <>
-                                        <Sidebar />
-                                        {width < 768 && <Navbar />}
-                                        {/*{width < 768 && <BottomNav />}*/}
-                                    </>
-                                )}
-                                <div className="app_container">
-                                    <div className="app_container-content d-flex flex-column flex-1">
-                                        <Suspense fallback={<LoadingScreen />}>
-                                            <Routes>
-                                                {/* Public Routes */}
-                                                <Route path="/login" element={<Login />} />
-                                                <Route path="/sign-up" element={<SignUp />} />
-                                                <Route path="*" element={<PrivateRoute><PageNotFound /></PrivateRoute>} />
-                                                {/* Protected Routes */}
-                                                <Route path="/" element={<PrivateRoute><Kader /></PrivateRoute>} />
-                                                <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                                                <Route path="/blank" element={<PrivateRoute><Blank /></PrivateRoute>} />
-                                                <Route path="/matches" element={<PrivateRoute><MatchesOverview /></PrivateRoute>} />
-                                                <Route path="/office/finanzen" element={<PrivateRoute><Finanzen /></PrivateRoute>} />
-                                                <Route path="/matches/:id" element={<PrivateRoute><MatchDetailPage /></PrivateRoute>} />
+                    <MinuteProvider>
+                        <ThemeProvider theme={{ theme: theme }}>
+                            <ThemeStyles />
+                            <ToastContainer theme={theme} autoClose={2500} position={direction === 'ltr' ? 'top-right' : 'top-left'} />
+                            <StyleSheetManager stylisPlugins={plugins}>
+                                <div className={`app ${isAuthRoute ? 'fluid' : ''}`} ref={appRef}>
+                                    <ScrollToTop />
+                                    {!isAuthRoute && (
+                                        <>
+                                            <Sidebar />
+                                            {width < 768 && <Navbar />}
+                                            {/*{width < 768 && <BottomNav />}*/}
+                                        </>
+                                    )}
+                                    <div className="app_container">
+                                        <div className="app_container-content d-flex flex-column flex-1">
+                                            <Suspense fallback={<LoadingScreen />}>
+                                                <Routes>
+                                                    {/* Public Routes */}
+                                                    <Route path="/login" element={<Login />} />
+                                                    <Route path="/sign-up" element={<SignUp />} />
+                                                    <Route path="*" element={<PrivateRoute><PageNotFound /></PrivateRoute>} />
+                                                    {/* Protected Routes */}
+                                                    <Route path="/" element={<PrivateRoute><MatchesOverview /></PrivateRoute>} />
+                                                    <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                                                    <Route path="/blank" element={<PrivateRoute><Blank /></PrivateRoute>} />
+                                                    <Route path="/matches" element={<PrivateRoute><MatchesOverview /></PrivateRoute>} />
+                                                    <Route path="/office/finanzen" element={<PrivateRoute><Finanzen /></PrivateRoute>} />
+                                                    <Route path="/matches/:id" element={<PrivateRoute><MatchDetailPage /></PrivateRoute>} />
 
 
-                                                <Route path="/game-summary" element={<PrivateRoute><GameSummary /></PrivateRoute>} />
-                                                <Route path="/club-summary" element={<PrivateRoute><ClubSummary /></PrivateRoute>} />
-                                                <Route path="/championships" element={<PrivateRoute><Championships /></PrivateRoute>} />
-                                                <Route path="/league-overview" element={<PrivateRoute><LeagueOverview /></PrivateRoute>} />
-                                                <Route path="/fans-community" element={<PrivateRoute><FansCommunity /></PrivateRoute>} />
-                                                <Route path="/statistics" element={<PrivateRoute><Statistics /></PrivateRoute>} />
-                                                <Route path="/match-summary" element={<PrivateRoute><MatchSummary /></PrivateRoute>} />
-                                                <Route path="/match-overview" element={<PrivateRoute><MatchOverview /></PrivateRoute>} />
-                                                <Route path="/player-profile" element={<PrivateRoute><PlayerProfile /></PrivateRoute>} />
-                                                <Route path="/schedule" element={<PrivateRoute><Schedule /></PrivateRoute>} />
-                                                <Route path="/tickets" element={<PrivateRoute><Tickets /></PrivateRoute>} />
-                                                <Route path="/football-store" element={<PrivateRoute><FootballStore /></PrivateRoute>} />
-                                                <Route path="/brand-store" element={<PrivateRoute><BrandStore /></PrivateRoute>} />
-                                                <Route path="/product" element={<PrivateRoute><Product /></PrivateRoute>} />
-                                                <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-                                            </Routes>
-                                        </Suspense>
+                                                    <Route path="/game-summary" element={<PrivateRoute><GameSummary /></PrivateRoute>} />
+                                                    <Route path="/club-summary" element={<PrivateRoute><ClubSummary /></PrivateRoute>} />
+                                                    <Route path="/championships" element={<PrivateRoute><Championships /></PrivateRoute>} />
+                                                    <Route path="/league-overview" element={<PrivateRoute><LeagueOverview /></PrivateRoute>} />
+                                                    <Route path="/fans-community" element={<PrivateRoute><FansCommunity /></PrivateRoute>} />
+                                                    <Route path="/statistics" element={<PrivateRoute><Statistics /></PrivateRoute>} />
+                                                    <Route path="/match-summary" element={<PrivateRoute><MatchSummary /></PrivateRoute>} />
+                                                    <Route path="/match-overview" element={<PrivateRoute><MatchOverview /></PrivateRoute>} />
+                                                    <Route path="/player-profile" element={<PrivateRoute><PlayerProfile /></PrivateRoute>} />
+                                                    <Route path="/schedule" element={<PrivateRoute><Schedule /></PrivateRoute>} />
+                                                    <Route path="/tickets" element={<PrivateRoute><Tickets /></PrivateRoute>} />
+                                                    <Route path="/football-store" element={<PrivateRoute><FootballStore /></PrivateRoute>} />
+                                                    <Route path="/brand-store" element={<PrivateRoute><BrandStore /></PrivateRoute>} />
+                                                    <Route path="/product" element={<PrivateRoute><Product /></PrivateRoute>} />
+                                                    <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+                                                </Routes>
+                                            </Suspense>
+                                        </div>
                                     </div>
+                                    <ShoppingCart isPopup />
                                 </div>
-                                <ShoppingCart isPopup />
-                            </div>
-                        </StyleSheetManager>
-                    </ThemeProvider>
+                            </StyleSheetManager>
+                        </ThemeProvider>
+                    </MinuteProvider>
                 </SidebarProvider>
             </MuiThemeProvider>
         </CacheProvider>

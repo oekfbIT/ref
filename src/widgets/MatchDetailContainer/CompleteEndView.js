@@ -6,8 +6,13 @@ import TabButton from "@ui/TabButton";
 import { TabPanel } from "@mui/base/TabPanel";
 import Fade from "@mui/material/Fade";
 import PlayerRow from "@components/Row/PlayerRow";
+import styles from "@widgets/MatchDetailContainer/styles.module.scss";
+import MatchController from '../../network/MatchController'; // Import MatchController
 
-const PregameView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
+const CompleteEndView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
+    const [textareaContent, setTextareaContent] = useState('');
+    const matchController = new MatchController(); // Instantiate MatchController
+
     const getNonLineupPlayers = (team) => {
         const lineupPlayers = team.starters || [];
         return team.players.filter(player => !lineupPlayers.includes(player.id));
@@ -16,8 +21,23 @@ const PregameView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
     const homeNonLineupPlayers = getNonLineupPlayers(match.home_blanket);
     const awayNonLineupPlayers = getNonLineupPlayers(match.away_blanket);
 
+    const handlePlayerClick = (player) => {
+        const newContent = `${textareaContent}NR:  ${player.number}, SID: ${player.sid}, NAME: ${player.name} \n \n`;
+        setTextareaContent(newContent);
+    };
+
+    const handleSubmit = async () => {
+        try {
+            await matchController.submitGame(match.id, textareaContent);
+            alert("Match report submitted successfully!"); // Feedback for successful submission
+        } catch (error) {
+            console.error("Error submitting the match report:", error);
+            alert("Failed to submit match report.");
+        }
+    };
+
     return (
-        <Spring className="card h-2 card w-100">
+        <Spring className="card card w-100">
             <Tabs className="d-flex flex-column h-100 g-30" value={activeTab}>
                 <TabsList className="tab-nav col-2">
                     <TabButton
@@ -45,7 +65,7 @@ const PregameView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
                                             key={player.id}
                                             player={player}
                                             index={index}
-                                            onClick={() => onPlayerClick(player)}
+                                            onClick={() => handlePlayerClick(player)}
                                         />
                                     ))}
                                 </div>
@@ -61,7 +81,7 @@ const PregameView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
                                             key={player.id}
                                             player={player}
                                             index={index}
-                                            onClick={() => onPlayerClick(player)}
+                                            onClick={() => handlePlayerClick(player)}
                                         />
                                     ))}
                                 </div>
@@ -70,8 +90,23 @@ const PregameView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
                     </TabPanel>
                 </div>
             </Tabs>
+            <h3 className={styles.playerModalContainerName} style={{ marginTop: "40px" }}>Spielbereicht Abgeben</h3>
+            <div className="d-flex flex-column flex-1 g-30">
+                <textarea
+                    className="field flex-1"
+                    value={textareaContent}
+                    onChange={(e) => setTextareaContent(e.target.value)} // Allow manual input updates
+                />
+                <div className="d-flex flex-column g-16">
+                    <button
+                        onClick={handleSubmit} // Call handleSubmit on click
+                        className="btn">Spielbericht Absenden
+                    </button>
+                </div>
+            </div>
+
         </Spring>
     );
 };
 
-export default PregameView;
+export default CompleteEndView;

@@ -14,9 +14,9 @@ export const COLORS = [
     {id: 'olive', color1: 'olive'},
     {id: 'blue-light', color1: 'blue', color2: 'light-azure', isDuo: true},
     {id: 'green-light', color1: 'olive', color2: 'light-azure', isDuo: true},
-    {id: 'red-white', color1: 'red', color2: 'cold-white', isDuo: true},
-    {id: 'black-red', color1: 'black-3', color2: 'red', isDuo: true},
+    {id: 'red.jsx-white', color1: 'red', color2: 'cold-white', isDuo: true},
+    {id: 'black-red.jsx', color1: 'black-3', color2: 'red', isDuo: true},
     {id: 'turquoise', color1: 'turquoise'},
     {id: 'salmon', color1: 'salmon'},
-    {id: 'red-salmon', color1: 'red', color2: 'salmon', isDuo: true}
+    {id: 'red.jsx-salmon', color1: 'red', color2: 'salmon', isDuo: true}
 ]

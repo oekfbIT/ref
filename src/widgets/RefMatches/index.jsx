@@ -47,7 +47,7 @@ const RefMatches = () => {
             const matchDate = new Date(match.details.date);
             return (
                 matchDate.getDate() === selectedDay &&
-                match.status !== 'completed' &&
+                match.status !== 'submitted' &&
                 match.status !== 'cancelled'
             );
         })

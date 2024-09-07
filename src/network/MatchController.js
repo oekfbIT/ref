@@ -24,37 +24,40 @@ class MatchController {
 
     /**
      * Create a new match
-     * @param {Object} matchData - The data for the new match
+     * @param {number} gameday - Gameday number
+     * @param {string} date - Date of the match in ISO string format
+     * @param {string} stadium - UUID of the stadium
+     * @param {string} location - Location of the match
+     * @param {string} homeTeamId - UUID of the home team
+     * @param {string} awayTeamId - UUID of the away team
+     * @param {Object|null} homeBlanket - Home blanket data (nullable)
+     * @param {Object|null} awayBlanket - Away blanket data (nullable)
+     * @param {Object} score - Initial score (home and away)
+     * @param {string} status - Match status
      * @returns {Promise<Object>} Created match object
-     *
-     * @example
-     * const matchData = {
-     *   details: { gameday: 1, date: "2024-09-01T14:00:00Z", stadium: "stadium-uuid", location: "Vienna" },
-     *   homeTeamId: "home-team-uuid",
-     *   awayTeamId: "away-team-uuid",
-     *   homeBlanket: null,
-     *   awayBlanket: null,
-     *   score: { home: 0, away: 0 },
-     *   status: "pending"
-     * };
      */
-    async createMatch(matchData) {
+    async createMatch(gameday, date, stadium, location, homeTeamId, awayTeamId, homeBlanket = null, awayBlanket = null, score, status) {
+        const matchData = {
+            details: { gameday, date, stadium, location },
+            homeTeamId,
+            awayTeamId,
+            homeBlanket,
+            awayBlanket,
+            score,
+            status
+        };
         return this.apiService.post('matches', matchData);
     }
 
     /**
      * Update a match by ID
      * @param {string} matchId - The UUID of the match
-     * @param {Object} matchData - The data to update
+     * @param {Object} score - Updated score (home and away)
+     * @param {string} status - Updated match status
      * @returns {Promise<Object>} Updated match object
-     *
-     * @example
-     * const matchData = {
-     *   status: "completed",
-     *   score: { home: 3, away: 2 }
-     * };
      */
-    async updateMatch(matchId, matchData) {
+    async updateMatch(matchId, score, status) {
+        const matchData = { score, status };
         return this.apiService.patch(`matches/${matchId}`, matchData);
     }
 
@@ -70,99 +73,87 @@ class MatchController {
     /**
      * Add a goal to a match
      * @param {string} matchId - The UUID of the match
-     * @param {Object} goalData - The data for the goal
+     * @param {string} playerId - UUID of the player
+     * @param {string} scoreTeam - Team to which the score belongs ("home" or "away")
+     * @param {number} minute - Minute of the goal
+     * @param {string} name - Name of the player
+     * @param {string} image - Image URL of the player
+     * @param {string} number - Player's number
      * @returns {Promise<Object>} Response status
-     *
-     * @example
-     * const goalData = {
-     *   playerId: "player-uuid",
-     *   scoreTeam: "home",
-     *   minute: 45
-     * };
      */
-    async addGoal(matchId, goalData) {
+    async addGoal(matchId, playerId, scoreTeam, minute, name, image, number) {
+        const goalData = { playerId, scoreTeam, minute, name, image, number };
         return this.apiService.post(`matches/${matchId}/goal`, goalData);
     }
 
     /**
      * Add a red card to a player in a match
      * @param {string} matchId - The UUID of the match
-     * @param {Object} cardData - The data for the red card
+     * @param {string} playerId - UUID of the player
+     * @param {string} teamId - UUID of the team
+     * @param {number} minute - Minute of the card
+     * @param {string} name - Name of the player
+     * @param {string} image - Image URL of the player
+     * @param {string} number - Player's number
      * @returns {Promise<Object>} Response status
-     *
-     * @example
-     * const cardData = {
-     *   playerId: "player-uuid",
-     *   teamId: "team-uuid",
-     *   minute: 30
-     * };
      */
-    async addRedCard(matchId, cardData) {
+    async addRedCard(matchId, playerId, teamId, minute, name, image, number) {
+        const cardData = { playerId, teamId, minute, name, image, number };
         return this.apiService.post(`matches/${matchId}/redCard`, cardData);
     }
 
     /**
      * Add a yellow card to a player in a match
      * @param {string} matchId - The UUID of the match
-     * @param {Object} cardData - The data for the yellow card
+     * @param {string} playerId - UUID of the player
+     * @param {string} teamId - UUID of the team
+     * @param {number} minute - Minute of the card
+     * @param {string} name - Name of the player
+     * @param {string} image - Image URL of the player
+     * @param {string} number - Player's number
      * @returns {Promise<Object>} Response status
-     *
-     * @example
-     * const cardData = {
-     *   playerId: "player-uuid",
-     *   teamId: "team-uuid",
-     *   minute: 15
-     * };
      */
-    async addYellowCard(matchId, cardData) {
+    async addYellowCard(matchId, playerId, teamId, minute, name, image, number) {
+        const cardData = { playerId, teamId, minute, name, image, number };
         return this.apiService.post(`matches/${matchId}/yellowCard`, cardData);
     }
 
     /**
      * Add a yellow-red card to a player in a match
      * @param {string} matchId - The UUID of the match
-     * @param {Object} cardData - The data for the yellow-red card
+     * @param {string} playerId - UUID of the player
+     * @param {string} teamId - UUID of the team
+     * @param {number} minute - Minute of the card
+     * @param {string} name - Name of the player
+     * @param {string} image - Image URL of the player
+     * @param {string} number - Player's number
      * @returns {Promise<Object>} Response status
-     *
-     * @example
-     * const cardData = {
-     *   playerId: "player-uuid",
-     *   teamId: "team-uuid",
-     *   minute: 50
-     * };
      */
-    async addYellowRedCard(matchId, cardData) {
+    async addYellowRedCard(matchId, playerId, teamId, minute, name, image, number) {
+        const cardData = { playerId, teamId, minute, name, image, number };
         return this.apiService.post(`matches/${matchId}/yellowRedCard`, cardData);
     }
 
     /**
-     * Add a player to the home blanket
+     * Add multiple players to the home blanket
      * @param {string} matchId - The UUID of the match
-     * @param {Object} playerData - The data for the player
+     * @param {string[]} playerIds - Array of player UUIDs
      * @returns {Promise<Object>} Response status
-     *
-     * @example
-     * const playerData = {
-     *   playerId: "player-uuid"
-     * };
      */
-    async addPlayerToHomeBlankett(matchId, playerData) {
-        return this.apiService.post(`matches/${matchId}/homeBlankett/addPlayer`, playerData);
+    async addPlayersToHomeBlanket(matchId, playerIds) {
+        const playerData = { playerIds };
+        return this.apiService.post(`matches/${matchId}/homeBlanket/addPlayers`, playerData);
     }
 
     /**
-     * Add a player to the away blanket
+     * Add multiple players to the away blanket
      * @param {string} matchId - The UUID of the match
-     * @param {Object} playerData - The data for the player
+     * @param {string[]} playerIds - Array of player UUIDs
      * @returns {Promise<Object>} Response status
-     *
-     * @example
-     * const playerData = {
-     *   playerId: "player-uuid"
-     * };
      */
-    async addPlayerToAwayBlankett(matchId, playerData) {
-        return this.apiService.post(`matches/${matchId}/awayBlankett/addPlayer`, playerData);
+    async addPlayersToAwayBlanket(matchId, playerIds) {
+        const playerData = { playerIds };
+        return this.apiService.post(`matches/${matchId}/awayBlanket/addPlayers`, playerData);
     }
 
     /**
@@ -202,17 +193,35 @@ class MatchController {
     }
 
     /**
+     * End a game
+     * @param {string} matchId - The UUID of the match
+     * @returns {Promise<Object>} Response status
+     */
+    async spielAbbruch(matchId) {
+        return this.apiService.patch(`matches/${matchId}/spielabbruch`);
+    }
+
+    /**
+     * Submit a game and update match status to submitted
+     * @param {string} matchId - The UUID of the match
+     * @param {string} text - The match report text
+     * @returns {Promise<Object>} Response status
+     */
+    async submitGame(matchId, text) {
+        const submitData = {
+            text
+        };
+        return this.apiService.patch(`matches/${matchId}/submit`, submitData);
+    }
+
+    /**
      * Mark a game as a no-show
      * @param {string} matchId - The UUID of the match
-     * @param {Object} noShowData - Data for the no-show (winning team)
+     * @param {string} winningTeam - The team that won due to no-show ("home" or "away")
      * @returns {Promise<Object>} Response status
-     *
-     * @example
-     * const noShowData = {
-     *   winningTeam: "home"
-     * };
      */
-    async noShowGame(matchId, noShowData) {
+    async noShowGame(matchId, winningTeam) {
+        const noShowData = { winningTeam };
         return this.apiService.patch(`matches/${matchId}/noShowGame`, noShowData);
     }
 }

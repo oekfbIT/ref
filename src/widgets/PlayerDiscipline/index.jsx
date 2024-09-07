@@ -16,7 +16,7 @@ const PlayerDiscipline = ({clubID = 'realmadrid', firstName = 'Manuel', lastName
     const {direction} = useThemeProvider();
 
     const drawYellowCards = () => {
-        return Array(yellow).fill(0).map((_, i) => <span key={i} className={`${styles.card} ${styles.yellow} ${styles[direction]}`}/>)
+        return Array(yellow).fill(0).map((_, i) => <span key={i} className={`${styles.karte} ${styles.yellow} ${styles[direction]}`}/>)
     }
 
     return (

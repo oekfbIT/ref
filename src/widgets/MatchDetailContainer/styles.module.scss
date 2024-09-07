@@ -11,6 +11,15 @@
     gap: 20px;
 }
 
+.grid2 {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
 .cardColumn {
     display: flex;
     flex-direction: column;
@@ -31,7 +40,7 @@
 }
 .clubDress {
     width: auto;
-    height: 150px;
+    height: 80px;
 }
 
 .teamName {
@@ -45,6 +54,10 @@
         grid-template-columns: repeat(3, 1fr);
     }
 
+    .grid2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .card {
         height: auto;
         padding: 20px;
@@ -52,6 +65,23 @@
 }
 
 //
+
+.row {
+    display: flex;
+    justify-items: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.actions {
+    display: flex;
+    justify-items: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 
 // views.module.scss
 .viewContainer {
@@ -68,6 +98,11 @@
 h3 {
     font-size: 1.5rem;
     color: #333;
+}
+
+h4 {
+    font-size: 1rem;
+    color: white;
 }
 
 // styles.module.scss
@@ -123,6 +158,8 @@ h3 {
     margin: 0px 10px;
 }
 
+
+
 .btnOrange {
     padding: 10px 30px;
     background-color: orange;
@@ -130,6 +167,24 @@ h3 {
     color: black;
     border-radius: 5px;
     margin: 0px 10px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover and state changes */
+
+    &:hover {
+        background-color: orangered;
+        color: white; /* Change text color for selected state */
+
+    }
+
+    &.selected {
+        background-color: red;
+        color: white; /* Change text color for selected state */
+    }
+
+    &:disabled {
+        background-color: #ccc; /* Gray background for disabled state */
+        color: #666; /* Gray text color for disabled state */
+        cursor: not-allowed; /* Optional: Change cursor for disabled state */
+    }
 }
 
 .stopwatchContainer {
@@ -141,6 +196,8 @@ h3 {
     font-size: 2rem; // Example styling, adjust as needed
     font-weight: bold;
     color: white;
+    line-height: 1.5;
+
 }
 
 .counterLbl {
@@ -148,4 +205,198 @@ h3 {
     margin-bottom: 15px;
     font-weight: normal;
     color: white;
+}
+/* Add this CSS for basic modal styling */
+.modalContent {
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: black;
+    padding: 20px;
+    outline: none;
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.location {
+    color: orange;
+    text-align: center;
+    margin-top: 30px;
+    font-weight: bold;
+    padding: 10px 0px;
+}
+
+.playerModalContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    margin: 30px;
+    background-color: #000000;
+    padding: 20px; /* Adds some inner spacing */
+    border-radius: 10px; /* Rounds the corners for a smooth look */
+    box-shadow: 0 4px 10px rgba(255, 150, 150, 0.1), 0 6px 20px rgba(0, 0, 0, 0.5); /* Adds a multi-layered shadow */
+}
+.playerModalContainerName {
+    color: white;
+}
+
+.playerModalContainerNumber {
+    color: orange;
+
+}
+
+.title {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+//.modalContent {
+//    position: absolute;
+//    top: 50%;
+//    left: 50%;
+//    transform: translate(-50%, -50%);
+//    background-color: white;
+//    padding: 20px;
+//    outline: none;
+//    border-radius: 8px;
+//    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+//    max-width: 90%;
+//    max-height: 90%;
+//    overflow-y: auto;
+//}
+
+.playerList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.playerRow {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    &:hover {
+        background-color: orange;
+        color: black;
+    }
+}
+
+.selected {
+    background-color: #cce5ff;
+    border-color: #007bff;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.grid3 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    margin-top: 20px;
+}
+
+.gridItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px; /* Increased the width to make it more balanced */
+    height: 120px; /* Increased the height to make more room */
+    cursor: pointer;
+}
+
+.gridItem img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-bottom: 5px; /* Added space between the image and text */
+}
+
+.gridItem p {
+    margin-top: 5px;
+    text-align: center;
+    font-size: 14px;
+    color: #ccc; /* Adjust the text color if necessary */
+}
+
+.karte {
+    display: block;
+    width: 12px;
+    height: 17px;
+    border-radius: 2px;
+
+    &_wrapper {
+        transform: scaleX(-1);
+        display: flex;
+    }
+
+    &.red {
+        background: #E0162E;
+        border: 2px solid #910C0C;
+    }
+
+    &.yellow {
+        background: #F9C700;
+        border: 2px solid #A37F00;
+        position: relative;
+
+        &.ltr:not(:first-child) {
+            margin-left: -6px;
+        }
+
+        &.rtl:not(:first-child) {
+            margin-right: -6px;
+        }
+    }
+}
+
+.eventCard {
+
+}
+
+.eventList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+.eventDetails {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.eventDetailsWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.eventImage {
+    width: 20px;
 }

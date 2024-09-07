@@ -35,7 +35,7 @@ const StyledClubInfo = styled.div`
 `;
 
 const CustomScatterShape = ({cx, cy, fill, ...props}) => {
-    const color = fill === 'var(--red)' ? 'red' : 'purple';
+    const color = fill === 'var(--red.jsx)' ? 'red' : 'purple';
     const isDominant = props.dom === props.dataKey;
 
     return (

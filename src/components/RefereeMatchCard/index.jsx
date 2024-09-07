@@ -19,6 +19,29 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
         return `${hours}:${minutes} ${day}.${month}.${year}`;
     };
 
+    const matchStatus = (matchData) => {
+        if (!matchData) return;
+        const { status } = matchData;
+
+        switch (status) {
+            case 'pending':
+                return "Spielvorschau";
+            case 'first':
+                return "1. Halbzeit";
+            case 'halftime':
+                return "Halbzeit";
+            case 'second':
+                return "2. Halbzeit";
+            case 'completed':
+                return "Spielbericht Offen";
+            case 'submitted':
+                return "Spiel Eingereicht";
+            default:
+                return "Status Unbekannt";
+        }
+    };
+
+
     return (
         <Spring className={`${styles.container} h-100`} type="slideUp" index={index}>
             <div
@@ -35,7 +58,18 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                     <div style={{ minWidth: 0, maxWidth: "100px" }}>
                         <h5>{homeTeam.name || 'Home Team'}</h5>
                     </div>
-                    <div className="text-right" style={{ minWidth: 0, maxWidth: "100px", textAlign: "right" }}>
+
+                    <div>
+                        <h4 style={{color: "orange", textAlign: "center"}}
+                            className="text-12 text-overflow">Status:</h4>
+                        <h2 style={{textAlign: "center", maxWidth: "150px", height: "auto"}}
+                            className="text-12 text-overflow">
+                            {matchStatus(match) || 'Nicht Zugeornet'}
+                        </h2>
+
+                    </div>
+
+                    <div className="text-right" style={{minWidth: 0, maxWidth: "100px", textAlign: "right"}}>
                         <h5>{awayTeam.name || 'Away Team'}</h5>
                     </div>
                 </div>
@@ -44,14 +78,17 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                     <img className="club-dress" src={match.home_blanket.dress || ''} alt={homeTeam.name || 'Home Team'} />
 
                     <div className="d-flex flex-column justify-content-center g-5">
-                        <h4 style={{ color: "orange", textAlign: "center" }} className="text-12 text-overflow">Spielplatzt:</h4>
+                        <h4 style={{color: "orange", textAlign: "center"}}
+                            className="text-12 text-overflow">Spielplatzt:</h4>
 
-                        <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
+                        <h2 style={{textAlign: "center", maxWidth: "150px", height: "auto"}}
+                            className="text-12 text-overflow">
                             {match.details.location || 'Nicht Zugeornet'}, {formatDate(match.details.date) || 'Nicht Zugeornet'}
                         </h2>
                     </div>
 
-                    <img className="club-dress" src={match.away_blanket.dress || ''} alt={homeTeam.name || 'Home Team'} />
+                    <img className="club-dress" src={match.away_blanket.dress || ''}
+                         alt={homeTeam.name || 'Home Team'}/>
                 </div>
 
             </div>

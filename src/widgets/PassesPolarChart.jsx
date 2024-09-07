@@ -46,7 +46,7 @@ const PassesPolarChart = () => {
                                fill="var(--accent)"
                                fillOpacity={0.1}/>
                         <Radar dataKey="b"
-                               activeDot={{stroke: 'var(--red)'}}
+                               activeDot={{stroke: 'var(--red.jsx)'}}
                                stroke="var(--red)"
                                strokeWidth={4}
                                fill="var(--red)"
