@@ -300,7 +300,7 @@ const RefDetailContainer = ({ id }) => {
                         {matchStatusText(match.status)}
                     </button>
 
-                    {match.status !== "pending" || "completed" || "abbgebrochen"  && (
+                    {match.status !== "pending" || "abbgebrochen"  && (
                         <button
                             className={styles.btnOrange}
                             onClick={handleCancel}
