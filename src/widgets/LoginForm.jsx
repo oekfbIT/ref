@@ -78,7 +78,7 @@ const LoginForm = () => {
 
     return (
         <>
-            <h1>Mannschaft Login</h1>
+            <h1>Schiedrichter Login</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="d-flex flex-column g-10" style={{ margin: "20px 0 30px" }}>
                     <div className="d-flex flex-column g-20">
