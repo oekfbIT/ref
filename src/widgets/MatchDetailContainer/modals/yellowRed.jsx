@@ -5,6 +5,9 @@ import styles from '../styles.module.scss';
 const YellowRedCardModal = ({ open, onClose, onConfirm, players = [] }) => {
     const [selectedPlayer, setSelectedPlayer] = useState(null);
 
+    // Filter players who already have at least one yellow card
+    const availablePlayers = players.filter(player => player.yellow_card > 0);
+
     const handlePlayerSelect = (player) => {
         setSelectedPlayer(player);
     };
@@ -12,7 +15,7 @@ const YellowRedCardModal = ({ open, onClose, onConfirm, players = [] }) => {
     const handleConfirm = () => {
         if (selectedPlayer) {
             onConfirm(selectedPlayer);
-            setSelectedPlayer(null)
+            setSelectedPlayer(null);
             onClose();
         }
     };
@@ -21,12 +24,12 @@ const YellowRedCardModal = ({ open, onClose, onConfirm, players = [] }) => {
         <Modal open={open} onClose={onClose}>
             <Box className={styles.modalContent}>
                 <div style={{backgroundColor: "black"}}>
-                    {/*// CLOSING */}
+                    {/* Closing Button */}
                     <button style={{marginBottom: "30px"}} onClick={onClose}>Schließen</button>
                 </div>
 
                 <div className={styles.playerList}>
-                    {players.length > 0 ? players.map((player) => (
+                    {availablePlayers.length > 0 ? availablePlayers.map((player) => (
                         <div
                             key={player.id}
                             className={`${styles.playerRow} ${selectedPlayer?.id === player.id ? styles.selected : ''}`}

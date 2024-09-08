@@ -48,6 +48,7 @@ const RefMatches = () => {
             return (
                 matchDate.getDate() === selectedDay &&
                 match.status !== 'submitted' &&
+                match.status !== 'done' &&
                 match.status !== 'cancelled'
             );
         })

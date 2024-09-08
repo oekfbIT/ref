@@ -86,9 +86,11 @@ const RefDetailContainer = ({ id }) => {
             case 'second':
                 return "Spiel Beenden";
             case 'completed':
-                return "Spiel Abschließen";
-            case 'abbgebrochen':
+                return "Spielbericht Abgeben";
+            case 'submitted':
                 return "Spiel Abschließen ";
+            case 'abbgebrochen':
+                return "Spielbericht Abgeben ";
             default:
                 return "Status Unbekannt";
         }
@@ -109,6 +111,8 @@ const RefDetailContainer = ({ id }) => {
                 return "2. Halbzeit";
             case 'completed':
                 return "Spiel Beendet";
+            case 'submitted':
+                return "Spiel Bericht Abgesendet"
             case 'abbgebrochen':
                 return 'Spiel Abbgebrochen';
             default:
@@ -205,6 +209,16 @@ const RefDetailContainer = ({ id }) => {
                 case 'second':
                     await matchController.endGame(match.id);
                     break;
+                case 'completed':
+                    console.log("Mactch Completed");
+                    break;
+                case 'submitted':
+                    await matchController.done(match.id);
+                    navigate('/matches');
+                    break;
+                case 'abbgebrochen':
+                    console.log("Mactch abbgebrochen");
+                    break;
                 default:
                     break;
             }
@@ -249,14 +263,22 @@ const RefDetailContainer = ({ id }) => {
 
     const renderView = () => {
         switch (match?.status) {
-            case 'pending': return <PregameView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} />;
-            case 'first': return <FirstHalfView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} onGoalClick={(goal) => handleItemClick(goal, 'goal')} activeTab={activeTab} setActiveTab={setActiveTab} teamID={getActiveTeamId()} refetch={fetchMatch} />;
-            case 'halftime': return <HalfTimeView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} onGoalClick={(goal) => handleItemClick(goal, 'goal')} />;
-            case 'second': return <SecondHalfView  match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} onGoalClick={(goal) => handleItemClick(goal, 'goal')} activeTab={activeTab} setActiveTab={setActiveTab} teamID={getActiveTeamId()} refetch={fetchMatch} />;
-            case 'completed': return <CompleteEndView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} />;
-            case 'submitted': return <CompleteEndView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} />;
-            case 'abbgebrochen': return <CompleteEndView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} />;
-            default: return <div>Invalid match status</div>;
+            case 'pending':
+                return <PregameView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} />;
+            case 'first':
+                return <FirstHalfView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} onGoalClick={(goal) => handleItemClick(goal, 'goal')} activeTab={activeTab} setActiveTab={setActiveTab} teamID={getActiveTeamId()} refetch={fetchMatch} />;
+            case 'halftime':
+                return <HalfTimeView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} onGoalClick={(goal) => handleItemClick(goal, 'goal')} />;
+            case 'second':
+                return <SecondHalfView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} onGoalClick={(goal) => handleItemClick(goal, 'goal')} activeTab={activeTab} setActiveTab={setActiveTab} teamID={getActiveTeamId()} refetch={fetchMatch} />;
+            case 'completed':
+                return <CompleteEndView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} onConfirm={fetchMatch} />;
+            case 'submitted':
+                return <CompleteEndView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} onConfirm={fetchMatch} />;
+            case 'abbgebrochen':
+                return <CompleteEndView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} onConfirm={fetchMatch} />;
+            default:
+                return <div>Invalid match status</div>;
         }
     };
 
@@ -300,24 +322,30 @@ const RefDetailContainer = ({ id }) => {
                     <button
                         className={styles.btnGreen}
                         onClick={handleAction}
-                        disabled={['completed', 'submitted'].includes(match.status)}>
+                        disabled={
+                            (match.status === 'completed' && (!match.bericht || match.bericht === "")) ||
+                            ['completed'].includes(match.status)
+                        }
+                    >
                         {matchStatusText(match.status)}
                     </button>
 
-                    {match.status !== "pending" || "abbgebrochen"  && (
+                    {match.status !== "pending" || "abbgebrochen" && (
                         <button
                             className={styles.btnOrange}
                             onClick={handleCancel}
-                            disabled={['completed', 'submitted'].includes(match.status)}>
+                            disabled={['completed', 'submitted'].includes(match.status)}
+                        >
                             Spiel Absagen
                         </button>
                     )}
 
-                    {(match.status !== "pending" && match.status !== "completed" && match.status !== "abbgebrochen") && (
+                    {(match.status !== "pending" && match.status !== "completed" && match.status !== "abbgebrochen" && match.status !== "submitted") && (
                         <button
                             className={styles.btnOrange}
                             onClick={handleAbbruch}
-                            disabled={['completed', 'submitted'].includes(match.status)}>
+                            disabled={['completed', 'submitted'].includes(match.status)}
+                        >
                             Spiel Abbruch
                         </button>
                     )}
@@ -333,7 +361,8 @@ const RefDetailContainer = ({ id }) => {
                     <h4>Welche Mannschaft hat das Spiel Gewonnen?</h4>
                     <div className={styles.grid2}>
                         <div>
-                            <img className={styles.clubLogo} src={homeTeam.logo || ''} alt={homeTeam.name || 'Home Team'} style={{ maxWidth: '150px' }} />
+                            <img className={styles.clubLogo} src={homeTeam.logo || ''}
+                                 alt={homeTeam.name || 'Home Team'} style={{maxWidth: '150px'}}/>
                             <h4 className={styles.teamName}>{homeTeam.name || 'Home Team'}</h4>
                             <button
                                 className={styles.btnOrange}
@@ -343,7 +372,7 @@ const RefDetailContainer = ({ id }) => {
                             </button>
                         </div>
                         <div>
-                            <img className={styles.clubLogo} src={awayTeam.logo || ''} alt={awayTeam.name || 'Away Team'} style={{ maxWidth: '150px' }} />
+                        <img className={styles.clubLogo} src={awayTeam.logo || ''} alt={awayTeam.name || 'Away Team'} style={{ maxWidth: '150px' }} />
                             <h4 className={styles.teamName}>{awayTeam.name || 'Away Team'}</h4>
                             <button
                                 className={styles.btnOrange}

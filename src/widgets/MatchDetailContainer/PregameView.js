@@ -41,6 +41,7 @@ const PregameView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
                             <div className="h-100" style={{ marginTop: 10 }}>
                                 <div className="d-flex flex-column g-1">
                                     {homeNonLineupPlayers.map((player, index) => (
+                                        // Add Trainer
                                         <PlayerRow
                                             key={player.id}
                                             player={player}

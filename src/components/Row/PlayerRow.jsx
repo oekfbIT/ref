@@ -65,11 +65,11 @@ const PlayerRow = ({ player, index, onClick }) => {
                     {player.name} ({player.number})
 
                     <div>
-                        {player.yellow_card == 1 && (
+                        {player.yellow_card >=  1 && (
                             <span key={player.id} className={`${styles.karte} ${styles.yellow} ${styles[direction]}`} />
                         )}
 
-                        {player.red_card == 1 && (
+                        {player.red_card >=  1 && (
                             <span key={player.id} className={`${styles.karte} ${styles.red} ${styles[direction]}`} />
                         )}
 

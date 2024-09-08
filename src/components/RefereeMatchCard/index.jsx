@@ -36,6 +36,8 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                 return "Spielbericht Offen";
             case 'submitted':
                 return "Spiel Eingereicht";
+            case 'done':
+                return "Spiel Abgeschlossen und Verrechnet";
             default:
                 return "Status Unbekannt";
         }

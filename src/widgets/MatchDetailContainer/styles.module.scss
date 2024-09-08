@@ -191,6 +191,19 @@ h4 {
     }
 }
 
+.btnOrange:disabled {
+    background-color: #ccc; /* Gray background for disabled state */
+    color: #666; /* Gray text color for disabled state */
+    cursor: not-allowed; /* Optional: Change cursor for disabled state */
+}
+
+.btnGreen:disabled {
+    background-color: #ccc; /* Gray background for disabled state */
+    color: #666; /* Gray text color for disabled state */
+    cursor: not-allowed; /* Optional: Change cursor for disabled state */
+}
+
+
 .stopwatchContainer {
     text-align: center;
     padding: 1rem; // Optional: Adjust padding as needed

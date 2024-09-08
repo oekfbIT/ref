@@ -202,6 +202,14 @@ class MatchController {
     }
 
     /**
+     * End a game
+     * @param {string} matchId - The UUID of the match
+     * @returns {Promise<Object>} Response status
+     */
+    async done(matchId) {
+        return this.apiService.patch(`matches/${matchId}/done`);
+    }
+    /**
      * Submit a game and update match status to submitted
      * @param {string} matchId - The UUID of the match
      * @param {string} text - The match report text

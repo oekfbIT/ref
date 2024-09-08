@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Spring from "@components/Spring";
 import { Tabs } from "@mui/base/Tabs";
 import { TabsList } from "@mui/base/TabsList";
@@ -9,9 +9,16 @@ import PlayerRow from "@components/Row/PlayerRow";
 import styles from "@widgets/MatchDetailContainer/styles.module.scss";
 import MatchController from '../../network/MatchController'; // Import MatchController
 
-const CompleteEndView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
+const CompleteEndView = ({ match, onPlayerClick, activeTab, setActiveTab, onConfirm }) => {
     const [textareaContent, setTextareaContent] = useState('');
     const matchController = new MatchController(); // Instantiate MatchController
+
+    // Populate textarea with match.bericht if it exists
+    useEffect(() => {
+        if (match.bericht) {
+            setTextareaContent(match.bericht);
+        }
+    }, [match.bericht]);
 
     const getNonLineupPlayers = (team) => {
         const lineupPlayers = team.starters || [];
@@ -29,7 +36,11 @@ const CompleteEndView = ({ match, onPlayerClick, activeTab, setActiveTab }) => {
     const handleSubmit = async () => {
         try {
             await matchController.submitGame(match.id, textareaContent);
-            alert("Match report submitted successfully!"); // Feedback for successful submission
+            alert("Match report submitted successfully!");
+
+            if (typeof onConfirm === "function") {
+                onConfirm();  // Ensure onConfirm is a valid function and call it after submission
+            }
         } catch (error) {
             console.error("Error submitting the match report:", error);
             alert("Failed to submit match report.");
