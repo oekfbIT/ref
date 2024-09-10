@@ -45,7 +45,7 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
 
 
     return (
-        <Spring className={`${styles.container} h-100`} type="slideUp" index={index}>
+        <Spring className={`${styles.container}`} type="slideUp" index={index}>
             <div
                 className={"card-padded d-flex flex-column g-20"}
                 style={{ paddingBottom: variant !== 'extended' ? 'var(--card-padding)' : 10, cursor: 'pointer' }} // Added cursor style here
@@ -58,7 +58,7 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                 </div>
                 <div className="d-flex justify-content-between g-30">
                     <div style={{ minWidth: 0, maxWidth: "100px" }}>
-                        <h5>{homeTeam.name || 'Home Team'}</h5>
+                        <h5 className={styles.h5}>{homeTeam.name || 'Home Team'}</h5>
                     </div>
 
                     <div>
@@ -72,7 +72,7 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                     </div>
 
                     <div className="text-right" style={{minWidth: 0, maxWidth: "100px", textAlign: "right"}}>
-                        <h5>{awayTeam.name || 'Away Team'}</h5>
+                        <h5 className={styles.h5}>{awayTeam.name || 'Away Team'}</h5>
                     </div>
                 </div>
 

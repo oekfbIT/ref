@@ -26,7 +26,18 @@ const TeamCard = ({ team, isHome }) => (
     </div>
 );
 
-const RefDetailContainer = ({ id }) => {
+const TrainerCard = ({ team, isHome }) => (
+    <div className={styles.cardColumn}>
+        <img className={styles.clubLogo}
+             src={team.coach.image_url || 'https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2FpendingPlayer.png?alt=media&token=b504ecd3-3c5d-4f88-b629-e901c51f5bb4'}
+             alt={team.name || "Nicht genannt"} />
+        <div className={styles.teamName}>
+            <h5>{team.coach.name || "Nicht genannt"}</h5>
+        </div>
+    </div>
+);
+
+const RefDetailContainer = ({id}) => {
     const [match, setMatch] = useState(null);
     const [stopwatch, setStopwatch] = useState('00:00:00');
     const [isRunning, setIsRunning] = useState(false);
@@ -300,10 +311,21 @@ const RefDetailContainer = ({ id }) => {
                 </div>
             </div>
 
+            <div className={styles.card}>
+                <h2>Trainer</h2>
+                <div className={styles.grid}>
+                    <TrainerCard team={homeTeam} isHome={true}/>
+                    <div className={styles.middleCol}>
+
+                    </div>
+                    <TrainerCard team={awayTeam} isHome={false}/>
+                </div>
+            </div>
+
             {/* Insert EventCard here */}
             <div className={styles.card}>
                 <p className={styles.title}>Spiel Events</p>
-                <EventCard events={match.events || []} />  {/* Pass the match events as props */}
+                <EventCard events={match.events || []}/> {/* Pass the match events as props */}
             </div>
 
             <div className={styles.card}>
@@ -372,7 +394,8 @@ const RefDetailContainer = ({ id }) => {
                             </button>
                         </div>
                         <div>
-                        <img className={styles.clubLogo} src={awayTeam.logo || ''} alt={awayTeam.name || 'Away Team'} style={{ maxWidth: '150px' }} />
+                            <img className={styles.clubLogo} src={awayTeam.logo || ''}
+                                 alt={awayTeam.name || 'Away Team'} style={{maxWidth: '150px'}}/>
                             <h4 className={styles.teamName}>{awayTeam.name || 'Away Team'}</h4>
                             <button
                                 className={styles.btnOrange}
@@ -414,7 +437,6 @@ const RefDetailContainer = ({ id }) => {
                     </div>
                 </Box>
             </Modal>
-
 
             <Modal open={!!modalType} onClose={handleCloseModal}>
                 <Box className="modal-content">

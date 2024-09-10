@@ -140,8 +140,8 @@ class MatchController {
      * @param {string[]} playerIds - Array of player UUIDs
      * @returns {Promise<Object>} Response status
      */
-    async addPlayersToHomeBlanket(matchId, playerIds) {
-        const playerData = { playerIds };
+    async addPlayersToHomeBlanket(matchId, playerIds, coach) {
+        const playerData = { playerIds, coach };
         return this.apiService.post(`matches/${matchId}/homeBlanket/addPlayers`, playerData);
     }
 
@@ -151,8 +151,8 @@ class MatchController {
      * @param {string[]} playerIds - Array of player UUIDs
      * @returns {Promise<Object>} Response status
      */
-    async addPlayersToAwayBlanket(matchId, playerIds) {
-        const playerData = { playerIds };
+    async addPlayersToAwayBlanket(matchId, playerIds, coach) {
+        const playerData = { playerIds, coach };
         return this.apiService.post(`matches/${matchId}/awayBlanket/addPlayers`, playerData);
     }
 
