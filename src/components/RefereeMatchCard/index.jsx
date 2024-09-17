@@ -10,14 +10,22 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
 
     // Function to format the date
     const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const day = date.getDate();
-        const month = date.getMonth() + 1; // Months are zero-based
-        const year = date.getFullYear();
-        return `${hours}:${minutes} ${day}.${month}.${year}`;
+        if (!dateString) return 'Nicht Zugeornet';
+
+        // Directly extract the date and time from the string, assuming the date is in UTC
+        const datePart = dateString.split('T')[0]; // "2024-11-17"
+        const timePart = dateString.split('T')[1].replace('Z', ''); // "12:00:00" -> removes 'Z' (UTC marker)
+
+        // Split the date part into year, month, and day
+        const [year, month, day] = datePart.split('-');
+
+        // Extract the hours and minutes from the time part
+        const [hour, minute] = timePart.split(':');
+
+        // Format the date and time in 'dd.mm.yyyy hh:mm' format
+        return `${day}.${month}.${year} ${hour}:${minute}`;
     };
+
 
     const matchStatus = (matchData) => {
         if (!matchData) return;
