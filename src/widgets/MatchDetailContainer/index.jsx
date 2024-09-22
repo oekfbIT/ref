@@ -28,11 +28,13 @@ const TeamCard = ({ team, isHome }) => (
 
 const TrainerCard = ({ team, isHome }) => (
     <div className={styles.cardColumn}>
-        <img className={styles.clubLogo}
-             src={team.coach.image_url || 'https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2FpendingPlayer.png?alt=media&token=b504ecd3-3c5d-4f88-b629-e901c51f5bb4'}
-             alt={team.name || "Nicht genannt"} />
+        <img
+            className={styles.clubLogo}
+            src={team.coach?.image_url || 'https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2FpendingPlayer.png?alt=media&token=b504ecd3-3c5d-4f88-b629-e901c51f5bb4'}
+            alt={team.coach?.name || "Nicht genannt"}
+        />
         <div className={styles.teamName}>
-            <h5>{team.coach.name || "Nicht genannt"}</h5>
+            <h5>{team.coach?.name || "Nicht genannt"}</h5>
         </div>
     </div>
 );
@@ -457,6 +459,7 @@ const RefDetailContainer = ({id}) => {
                     )}
                 </Box>
             </Modal>
+
         </Spring>
     );
 };
