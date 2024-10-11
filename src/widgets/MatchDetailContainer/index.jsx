@@ -230,7 +230,7 @@ const RefDetailContainer = ({id}) => {
                     navigate('/matches');
                     break;
                 case 'abbgebrochen':
-                    console.log("Mactch abbgebrochen");
+                    console.log("Match abbgebrochen");
                     break;
                 default:
                     break;
@@ -300,6 +300,35 @@ const RefDetailContainer = ({id}) => {
     const homeTeam = match.home_blanket || {};
     const awayTeam = match.away_blanket || {};
 
+    const renderTeamError = () => {
+        const homePlayers = match?.home_blanket?.players.length || 0;
+        const awayPlayers = match?.away_blanket?.players.length || 0;
+
+        if (homePlayers < 6 && awayPlayers < 6) {
+            return "Beide Teams haben zu wenige Spieler im Blankett";
+        }
+        if (homePlayers > 12 && awayPlayers > 12) {
+            return "Beide Teams haben zu viele Spieler im Blankett";
+        }
+        if (homePlayers < 6) {
+            return "Heim Team hat zu wenige Spieler im Blankett";
+        }
+        if (awayPlayers < 6) {
+            return "Auswärts Team hat zu wenige Spieler im Blankett";
+        }
+        if (homePlayers > 12) {
+            return "Heim Team hat zu viele Spieler im Blankett";
+        }
+        if (awayPlayers > 12) {
+            return "Auswärts Team hat zu viele Spieler im Blankett";
+        }
+
+        return null;
+    };
+
+    const teamError = renderTeamError();
+
+
     return (
         <Spring>
             <div className={styles.card}>
@@ -347,13 +376,13 @@ const RefDetailContainer = ({id}) => {
                         className={styles.btnGreen}
                         onClick={handleAction}
                         disabled={
+                            !!teamError || // Disable the button if there's an error with the team players
                             (match.status === 'completed' && (!match.bericht || match.bericht === "")) ||
                             ['completed'].includes(match.status)
                         }
                     >
                         {matchStatusText(match.status)}
                     </button>
-
                     {match.status !== "pending" || "abbgebrochen" && (
                         <button
                             className={styles.btnOrange}
@@ -374,6 +403,7 @@ const RefDetailContainer = ({id}) => {
                         </button>
                     )}
                 </div>
+                {teamError && <p style={{marginTop: "10px"}}>{teamError}</p>}
             </div>
 
             <div className={styles.card}>
