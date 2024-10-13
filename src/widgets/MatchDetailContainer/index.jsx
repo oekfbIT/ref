@@ -277,7 +277,7 @@ const RefDetailContainer = ({id}) => {
     const renderView = () => {
         switch (match?.status) {
             case 'pending':
-                return <PregameView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab} />;
+                return <PregameView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} activeTab={activeTab} setActiveTab={setActiveTab}/>;
             case 'first':
                 return <FirstHalfView match={match} onPlayerClick={(player) => handleItemClick(player, 'player')} onGoalClick={(goal) => handleItemClick(goal, 'goal')} activeTab={activeTab} setActiveTab={setActiveTab} teamID={getActiveTeamId()} refetch={fetchMatch} />;
             case 'halftime':
@@ -356,7 +356,7 @@ const RefDetailContainer = ({id}) => {
             {/* Insert EventCard here */}
             <div className={styles.card}>
                 <p className={styles.title}>Spiel Events</p>
-                <EventCard events={match.events || []}/> {/* Pass the match events as props */}
+                <EventCard events={match.events || []} matchId={match.id} refetch={refetchMatch} />
             </div>
 
             <div className={styles.card}>

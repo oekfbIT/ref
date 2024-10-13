@@ -8,7 +8,7 @@ import PregameView from "@widgets/MatchDetailContainer/PregameView";
 import MatchController from "../../network/MatchController";
 import { useMinute } from './MinuteContext';  // Import minute context
 
-const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
+const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch, onPlayerClick }) => {
     const [redCardOpen, setRedCardOpen] = useState(false);
     const [yellowCardOpen, setYellowCardOpen] = useState(false);
     const [yellowRedCardOpen, setYellowRedCardOpen] = useState(false);
@@ -21,34 +21,30 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
     const handleOpenYellowRedCard = () => setYellowRedCardOpen(true);
     const handleOpenGoal = () => setGoalOpen(true);
 
-    const handleGoalConfirm =  async (selectedPlayer, scoreTeam) => {
+    const handleGoalConfirm = async (selectedPlayer, scoreTeam, ownGoal) => {
         try {
-            // Call the addYellowCard method and wait for its completion
             await matchController.addGoal(
                 match.id,
                 selectedPlayer.id,
-                scoreTeam,
+                scoreTeam,    // "home" or "away"
                 minute,
                 selectedPlayer.name,
                 selectedPlayer.image,
-                selectedPlayer.number.toString()
+                selectedPlayer.number.toString(),
+                ownGoal       // Pass the ownGoal value
             );
 
-            console.log('Red card assigned to:', selectedPlayer.name);
+            console.log('Goal assigned to:', selectedPlayer.name);
 
-            // If the request was successful, trigger the refetch function
-            await refetch();
-
-            // Close the modal after success
-            setRedCardOpen(false);
+            await refetch();  // Refetch data after successful event
+            setGoalOpen(false);
         } catch (error) {
-            console.error('Failed to assign Red card:', error);
+            console.error('Failed to assign goal:', error);
         }
     };
 
-    const handleRedCardConfirm =  async (selectedPlayer) => {
+    const handleRedCardConfirm = async (selectedPlayer) => {
         try {
-            // Call the addYellowCard method and wait for its completion
             await matchController.addRedCard(
                 match.id,
                 selectedPlayer.id,
@@ -56,24 +52,22 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
                 minute,
                 selectedPlayer.name,
                 selectedPlayer.image,
-                selectedPlayer.number.toString()
+                selectedPlayer.number.toString(),
+                activeTab
+
             );
 
             console.log('Red card assigned to:', selectedPlayer.name);
 
-            // If the request was successful, trigger the refetch function
-            await refetch();
-
-            // Close the modal after success
+            await refetch();  // Refetch data after successful event
             setRedCardOpen(false);
         } catch (error) {
-            console.error('Failed to assign Red card:', error);
+            console.error('Failed to assign red card:', error);
         }
     };
 
     const handleYellowRedCardConfirm = async (selectedPlayer) => {
         try {
-            // Call the addYellowCard method and wait for its completion
             await matchController.addYellowRedCard(
                 match.id,
                 selectedPlayer.id,
@@ -81,28 +75,21 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
                 minute,
                 selectedPlayer.name,
                 selectedPlayer.image,
-                selectedPlayer.number.toString()
+                selectedPlayer.number.toString(),
+                activeTab
             );
 
-            console.log('YellowRed card assigned to:', selectedPlayer.name);
+            console.log('Yellow-Red card assigned to:', selectedPlayer.name);
 
-            // If the request was successful, trigger the refetch function
-            await refetch();
-
-            // Close the modal after success
+            await refetch();  // Refetch data after successful event
             setYellowRedCardOpen(false);
         } catch (error) {
-            console.error('Failed to assign yellow red card:', error);
+            console.error('Failed to assign yellow-red card:', error);
         }
-    };
-
-    const logPlayer = () => {
-       console.log("Pressing on Player")
     };
 
     const handleYellowConfirm = async (selectedPlayer) => {
         try {
-            // Call the addYellowCard method and wait for its completion
             await matchController.addYellowCard(
                 match.id,
                 selectedPlayer.id,
@@ -110,18 +97,25 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
                 minute,
                 selectedPlayer.name,
                 selectedPlayer.image,
-                selectedPlayer.number.toString()
+                selectedPlayer.number.toString(),
+                activeTab
             );
 
             console.log('Yellow card assigned to:', selectedPlayer.name);
 
-            // If the request was successful, trigger the refetch function
-            await refetch();
-
-            // Close the modal after success
+            await refetch();  // Refetch data after successful event
             setYellowCardOpen(false);
         } catch (error) {
             console.error('Failed to assign yellow card:', error);
+        }
+    };
+
+    const handleDeleteEvent = async (eventId) => {
+        try {
+            await matchController.deleteEvent(match.id, eventId);
+            await refetch();  // Refetch after event deletion
+        } catch (error) {
+            console.error('Failed to delete event:', error);
         }
     };
 
@@ -131,13 +125,12 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
 
     return (
         <div className={styles.actions}>
-            {/* Updated part with grid and placeholder images */}
             <div className={styles.grid3}>
                 <div className={styles.gridItem} onClick={handleOpenRedCard}>
                     <img
                         src="https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2Ficons%2Frot.png?alt=media&token=bdd39008-c39d-4928-a9ed-74c4fe764c2f"
                         alt="Red Card"/>
-                    <p className={styles.teamName}>Rote Karte</p>
+                    <p>Rote Karte</p>
                 </div>
                 <div className={styles.gridItem} onClick={handleOpenYellowCard}>
                     <img
@@ -155,15 +148,15 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch }) => {
                     <img
                         src="https://firebasestorage.googleapis.com/v0/b/oekfbbucket.appspot.com/o/adminfiles%2Ficons%2Ftor.png?alt=media&token=cd8e26a5-bdd8-41a4-a47a-f1a2a22a84bd"
                         alt="Add Goal"/>
-                    <p >Tor</p>
+                    <p>Tor</p>
                 </div>
             </div>
 
             <PregameView
                 match={match}
-                onPlayerClick={logPlayer}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                onPlayerClick={ onPlayerClick }
             />
 
             {/* Modals */}

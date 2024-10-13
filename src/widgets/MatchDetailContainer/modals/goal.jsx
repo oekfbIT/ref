@@ -5,6 +5,7 @@ import styles from '../styles.module.scss';
 const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
     const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [selectedTeam, setSelectedTeam] = useState(null);  // home or away
+    const [ownGoal, setOwnGoal] = useState(false);  // New state for own goal checkmark
     const [step, setStep] = useState(1);  // 1 for player selection, 2 for team selection
 
     const handlePlayerSelect = (player) => {
@@ -28,12 +29,15 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
         }
     };
 
+    const handleOwnGoalChange = (event) => {
+        setOwnGoal(event.target.checked);
+    };
+
     const handleConfirm = () => {
         if (selectedPlayer && selectedTeam) {
-            console.log("Confirming selection:", { player: selectedPlayer, team: selectedTeam });
-            onConfirm(selectedPlayer, selectedTeam);  // Pass "home" or "away"
-            setSelectedTeam(null)
-            setSelectedPlayer(null)
+            console.log("Confirming selection:", { player: selectedPlayer, team: selectedTeam, ownGoal });
+            onConfirm(selectedPlayer, selectedTeam, ownGoal);  // Pass "home", "away", and ownGoal status
+            handleReset();
             onClose();
         } else {
             console.error("Unable to confirm, player or team is missing.");
@@ -45,13 +49,25 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
         setSelectedTeam(null);  // Reset selected team
     };
 
+    const handleReset = () => {
+        setSelectedPlayer(null);
+        setSelectedTeam(null);
+        setOwnGoal(false);
+        setStep(1);
+    };
+
+    const handleModalClose = () => {
+        handleReset();
+        onClose();  // Call the original onClose function
+    };
+
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal open={open} onClose={handleModalClose}>
             <Box className={styles.modalContent}>
                 {step === 1 && (
                     <>
                         <div style={{ backgroundColor: "black" }}>
-                            <button style={{ marginBottom: "30px" }} onClick={onClose}>Schließen</button>
+                            <button style={{ marginBottom: "30px" }} onClick={handleModalClose}>Schließen</button>
                         </div>
 
                         <div className={styles.playerList}>
@@ -81,7 +97,6 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                             <div
                                 style={{
                                     width: '80px',
-                                    height: '80px',
                                     cursor: 'pointer',
                                     border: selectedTeam === 'home' ? '2px solid orange' : '2px solid transparent',
                                     backgroundColor: selectedTeam === 'home' ? 'orange' : 'transparent',  // Background color when selected
@@ -98,7 +113,6 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                             <div
                                 style={{
                                     width: '80px',
-                                    height: '80px',
                                     cursor: 'pointer',
                                     border: selectedTeam === 'away' ? '2px solid orange' : '2px solid transparent',
                                     backgroundColor: selectedTeam === 'away' ? 'orange' : 'transparent',  // Background color when selected
@@ -111,6 +125,19 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                                 <img className={styles.logo} src={match?.away_blanket?.logo} alt={match?.away_blanket?.name} style={{ width: '100%', height: '80%' }} />
                                 <span style={{ textAlign: 'center', marginTop: "15px" }}>{match?.away_blanket?.name}</span>
                             </div>
+                        </div>
+
+                        <div style={{ marginBottom: '20px' }}>
+                            {/* Checkbox for own goal */}
+                            <label style={{ display: 'flex', alignItems: 'center' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={ownGoal}
+                                    onChange={handleOwnGoalChange}
+                                    style={{ marginRight: '10px' }}
+                                />
+                                Eigentor
+                            </label>
                         </div>
 
                         <button className={styles.btnOrange}
