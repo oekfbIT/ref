@@ -58,7 +58,7 @@ const EventCard = ({ events, matchId, refetch }) => {
         const isOwnGoal = event.own_goal === true;
         return (
             <span className={styles.eventMinute}>
-                {event.minute}' {isOwnGoal ? '(ET) ' : ''}
+                {event.minute}' {isOwnGoal ? '(Eigentor) ' : ''}
             </span>
         );
     };
