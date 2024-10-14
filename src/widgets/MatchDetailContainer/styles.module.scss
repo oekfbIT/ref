@@ -228,7 +228,7 @@ h4 {
 /* Add this CSS for basic modal styling */
 .modalContent {
     width: 90%;
-    max-width: 400px;
+    max-width: 500px; /* Increased width for better layout */
     max-height: 80vh;
     color: white;
     position: absolute;
@@ -243,7 +243,9 @@ h4 {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    align-items: center;
+    /* Remove align-items: center to allow stretching */
+    /* align-items: center; */
+    overflow: hidden; /* Prevent outer scrolling */
 }
 
 .location {
@@ -302,6 +304,21 @@ h4 {
     flex-direction: column;
     gap: 10px;
     width: 100%;
+    flex: 1; /* Allow the list to take up available space */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding-right: 10px; /* Optional: Add padding to prevent scrollbar overlap */
+}
+.playerList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.playerList::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 165, 0, 0.5); /* Orange scrollbar thumb */
+    border-radius: 4px;
+}
+
+.playerList::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1); /* Light track */
 }
 
 .playerRow {
