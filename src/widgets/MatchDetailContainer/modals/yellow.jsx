@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
-import { Modal, Box, Button } from '@mui/material';
+import React, { useState, useMemo } from 'react';
+import { Modal, Box } from '@mui/material';
 import styles from '../styles.module.scss';
 
 const YellowCardModal = ({ open, onClose, onConfirm, players = [] }) => {
     const [selectedPlayer, setSelectedPlayer] = useState(null);
 
-    // Filter players who do not have yellow, red-yellow, or red cards
-    const availablePlayers = players.filter(
-        player => player.yellow_card === 0 && player.red_yellow_card === 0 && player.red_card === 0
-    );
+    // Enhanced filter to exclude players with any type of card
+    const availablePlayers = useMemo(() => {
+        return players.filter(player => {
+            const yellowCard = Number(player.yellow_card) || 0;
+            const redYellowCard = Number(player.red_yellow_card) || 0;
+            const redCard = Number(player.red_card) || 0;
+            return yellowCard === 0 && redYellowCard === 0 && redCard === 0;
+        });
+    }, [players]);
 
     const handlePlayerSelect = (player) => {
         setSelectedPlayer(player);
@@ -22,37 +27,55 @@ const YellowCardModal = ({ open, onClose, onConfirm, players = [] }) => {
         }
     };
 
+    const handleClose = () => {
+        setSelectedPlayer(null);
+        onClose();
+    };
+
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal open={open} onClose={handleClose}>
             <Box className={styles.modalContent}>
-                <div style={{backgroundColor: "black"}}>
+                <div style={{ backgroundColor: "black", padding: '10px' }}>
                     {/* Closing Button */}
-                    <button style={{marginBottom: "30px"}} onClick={onClose}>Schließen</button>
+                    <button
+                        style={{ marginBottom: "30px", color: 'white', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                        onClick={handleClose}
+                        aria-label="Close modal"
+                    >
+                        Schließen
+                    </button>
                 </div>
 
                 <div className={styles.playerList}>
-                    {availablePlayers.length > 0 ? availablePlayers.map((player) => (
-                        <div
-                            key={player.id}
-                            className={`${styles.playerRow} ${selectedPlayer?.id === player.id ? styles.selected : ''}`}
-                            onClick={() => handlePlayerSelect(player)}
-                        >
-                            <img src={player.image} alt={player.name}
-                                 style={{width: '50px', height: '50px', marginRight: '10px'}}/>
-                            <span>{player.name}</span>
-                            <span>({player.number})</span>
-
-                        </div>
-                    )) : <p>No players available</p>}
+                    {availablePlayers.length > 0 ? (
+                        availablePlayers.map((player) => (
+                            <div
+                                key={player.id}
+                                className={`${styles.playerRow} ${selectedPlayer?.id === player.id ? styles.selected : ''}`}
+                                onClick={() => handlePlayerSelect(player)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <img
+                                    src={player.image || '/path/to/default/image.png'}
+                                    alt={player.name}
+                                    style={{ width: '50px', height: '50px', marginRight: '10px', borderRadius: '50%' }}
+                                />
+                                <span>{player.name}</span>
+                                <span>({player.number})</span>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No players available</p>
+                    )}
                 </div>
 
-                <button className={styles.btnOrange}
-                        onClick={handleConfirm}
-                        disabled={!selectedPlayer}
+                <button
+                    className={styles.btnOrange}
+                    onClick={handleConfirm}
+                    disabled={!selectedPlayer}
                 >
                     Gelbe Karte Zuweisen
                 </button>
-
             </Box>
         </Modal>
     );
