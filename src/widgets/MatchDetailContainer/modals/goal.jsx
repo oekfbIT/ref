@@ -115,6 +115,9 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                             </button>
                         </div>
 
+                        <h3 style={{ fontSize: "24px", color: "white" }}>Wer bekommt den Punkt?</h3>
+
+                        
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '50px', width: "70%" }}>
                             {/* Home Team Selection */}
                             <div
