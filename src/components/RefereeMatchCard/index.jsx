@@ -12,9 +12,10 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
     const formatDate = (dateString) => {
         if (!dateString) return 'Nicht Zugeornet';
 
-        // Directly extract the date and time from the string, assuming the date is in UTC
         const datePart = dateString.split('T')[0]; // "2024-11-17"
-        const timePart = dateString.split('T')[1].replace('Z', ''); // "12:00:00" -> removes 'Z' (UTC marker)
+        const timePart = dateString.split('T')[1]?.replace('Z', ''); // Safely handle cases where time might be missing
+
+        if (!datePart || !timePart) return 'Invalid Date'; // Fallback in case of missing parts
 
         // Split the date part into year, month, and day
         const [year, month, day] = datePart.split('-');
@@ -26,9 +27,9 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
         return `${day}.${month}.${year} ${hour}:${minute}`;
     };
 
-
+    // Match status logic
     const matchStatus = (matchData) => {
-        if (!matchData) return;
+        if (!matchData) return 'Status Unbekannt';
         const { status } = matchData;
 
         switch (status) {
@@ -51,7 +52,6 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
         }
     };
 
-
     return (
         <Spring className={`${styles.container}`} type="slideUp" index={index}>
             <div
@@ -61,7 +61,7 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
             >
                 <div className="d-flex align-items-center justify-content-between p-relative">
                     <img className="club-logo" src={homeTeam.logo || ''} alt={homeTeam.name || 'Home Team'} />
-                    <Score team1={match.score.home || 0} team2={match.score.away || 0} variant="alt" />
+                    <Score team1={match?.score?.home || 0} team2={match?.score?.away || 0} variant="alt" />
                     <img className="club-logo" src={awayTeam.logo || ''} alt={awayTeam.name || 'Away Team'} />
                 </div>
                 <div className="d-flex justify-content-between g-30">
@@ -70,37 +70,30 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                     </div>
 
                     <div>
-                        <h4 style={{color: "orange", textAlign: "center"}}
-                            className="text-12 text-overflow">Status:</h4>
-                        <h2 style={{textAlign: "center", maxWidth: "150px", height: "auto"}}
-                            className="text-12 text-overflow">
-                            {matchStatus(match) || 'Nicht Zugeornet'}
+                        <h4 style={{ color: "orange", textAlign: "center" }} className="text-12 text-overflow">Status:</h4>
+                        <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
+                            {matchStatus(match)}
                         </h2>
-
                     </div>
 
-                    <div className="text-right" style={{minWidth: 0, maxWidth: "100px", textAlign: "right"}}>
+                    <div className="text-right" style={{ minWidth: 0, maxWidth: "100px", textAlign: "right" }}>
                         <h5 className={styles.h5}>{awayTeam.name || 'Away Team'}</h5>
                     </div>
                 </div>
 
                 <div className="d-flex justify-content-center g-30">
-                    <img className="club-dress" src={match.home_blanket.dress || ''} alt={homeTeam.name || 'Home Team'} />
+                    <img className="club-dress" src={homeTeam?.dress || ''} alt={homeTeam.name || 'Home Team'} />
 
                     <div className="d-flex flex-column justify-content-center g-5">
-                        <h4 style={{color: "orange", textAlign: "center"}}
-                            className="text-12 text-overflow">Spielplatzt:</h4>
+                        <h4 style={{ color: "orange", textAlign: "center" }} className="text-12 text-overflow">Spielplatzt:</h4>
 
-                        <h2 style={{textAlign: "center", maxWidth: "150px", height: "auto"}}
-                            className="text-12 text-overflow">
-                            {match.details.location || 'Nicht Zugeornet'}, {formatDate(match.details.date) || 'Nicht Zugeornet'}
+                        <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
+                            {match?.details?.location || 'Nicht Zugeornet'}, {formatDate(match?.details?.date) || 'Nicht Zugeornet'}
                         </h2>
                     </div>
 
-                    <img className="club-dress" src={match.away_blanket.dress || ''}
-                         alt={homeTeam.name || 'Home Team'}/>
+                    <img className="club-dress" src={awayTeam?.dress || ''} alt={awayTeam.name || 'Away Team'} />
                 </div>
-
             </div>
             {variant === 'extended' && (
                 <div className="border-top">
