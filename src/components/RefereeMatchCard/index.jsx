@@ -1,31 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './styles.module.scss';
 import Spring from '@components/Spring';
 import Score from '@ui/Score';
-import PropTypes from 'prop-types';
+
+// Helper function to format the date
+const formatDate = (dateString) => {
+    if (!dateString) return 'Invalid Date';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        return 'Invalid Date';
+    }
+    return date.toISOString().split('T')[0];
+};
 
 const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
-    const homeTeam = match?.home_blanket || {};  // Adjusted to match the API response structure
-    const awayTeam = match?.away_blanket || {};  // Adjusted to match the API response structure
-
-    // Function to format the date
-    const formatDate = (dateString) => {
-        if (!dateString) return 'Nicht Zugeornet';
-
-        const datePart = dateString.split('T')[0]; // "2024-11-17"
-        const timePart = dateString.split('T')[1]?.replace('Z', ''); // Safely handle cases where time might be missing
-
-        if (!datePart || !timePart) return 'Invalid Date'; // Fallback in case of missing parts
-
-        // Split the date part into year, month, and day
-        const [year, month, day] = datePart.split('-');
-
-        // Extract the hours and minutes from the time part
-        const [hour, minute] = timePart.split(':');
-
-        // Format the date and time in 'dd.mm.yyyy hh:mm' format
-        return `${day}.${month}.${year} ${hour}:${minute}`;
-    };
+    const homeTeam = match?.home_blanket || {};
+    const awayTeam = match?.away_blanket || {};
 
     // Match status logic
     const matchStatus = (matchData) => {
@@ -56,14 +47,17 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
         <Spring className={`${styles.container}`} type="slideUp" index={index}>
             <div
                 className={"card-padded d-flex flex-column g-20"}
-                style={{ paddingBottom: variant !== 'extended' ? 'var(--card-padding)' : 10, cursor: 'pointer' }} // Added cursor style here
+                style={{ paddingBottom: variant !== 'extended' ? 'var(--card-padding)' : 10, cursor: 'pointer' }}
                 onClick={() => (window.location.href = `/matches/${match.id}`)}
             >
+                {/* Team Logos and Score */}
                 <div className="d-flex align-items-center justify-content-between p-relative">
                     <img className="club-logo" src={homeTeam.logo || ''} alt={homeTeam.name || 'Home Team'} />
                     <Score team1={match?.score?.home || 0} team2={match?.score?.away || 0} variant="alt" />
                     <img className="club-logo" src={awayTeam.logo || ''} alt={awayTeam.name || 'Away Team'} />
                 </div>
+
+                {/* Team Names and Match Status */}
                 <div className="d-flex justify-content-between g-30">
                     <div style={{ minWidth: 0, maxWidth: "100px" }}>
                         <h5 className={styles.h5}>{homeTeam.name || 'Home Team'}</h5>
@@ -81,12 +75,12 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                     </div>
                 </div>
 
+                {/* Team Dress and Match Date/Location */}
                 <div className="d-flex justify-content-center g-30">
                     <img className="club-dress" src={homeTeam?.dress || ''} alt={homeTeam.name || 'Home Team'} />
 
                     <div className="d-flex flex-column justify-content-center g-5">
-                        <h4 style={{ color: "orange", textAlign: "center" }} className="text-12 text-overflow">Spielplatzt:</h4>
-
+                        <h4 style={{ color: "orange", textAlign: "center" }} className="text-12 text-overflow">Spielplatz:</h4>
                         <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
                             {match?.details?.location || 'Nicht Zugeornet'}, {formatDate(match?.details?.date) || 'Nicht Zugeornet'}
                         </h2>
@@ -95,6 +89,7 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                     <img className="club-dress" src={awayTeam?.dress || ''} alt={awayTeam.name || 'Away Team'} />
                 </div>
             </div>
+
             {variant === 'extended' && (
                 <div className="border-top">
                     {/* Add additional extended view details if required */}

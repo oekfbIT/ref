@@ -3,27 +3,33 @@ import classNames from 'classnames';
 import styles from './styles.module.scss';
 import { useThemeProvider } from '@contexts/themeContext';
 
+// Helper function to format the date safely
+const formatDate = (dateString) => {
+    if (!dateString) return 'Invalid Date';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        return 'Invalid Date';
+    }
+    return date.toISOString().split('T')[0]; // Return 'YYYY-MM-DD'
+};
+
 const Navigator = ({ active, setActive, assignments }) => {
     const { theme, direction } = useThemeProvider();
     const containerRef = useRef(null);
     const [closestDate, setClosestDate] = useState(null);
 
-    // Extract unique dates from the assignments using useMemo to avoid recalculations on every render
+    // Extract unique dates from the assignments
     const uniqueDates = useMemo(() => {
-        // Extract dates in 'YYYY-MM-DD' format to ignore time and get unique dates
         const dateStrings = assignments.map(assignment => {
-            const date = new Date(assignment.details.date);
-            return date.toISOString().split('T')[0]; // Convert to 'YYYY-MM-DD'
+            return formatDate(assignment.details.date);
         });
-
-        // Create a Set to remove duplicates and convert back to Date objects
         return [...new Set(dateStrings)].map(dateString => new Date(dateString));
     }, [assignments]);
 
     // Scroll to the active date
     useEffect(() => {
         const container = containerRef.current;
-        const activeElement = container.querySelector(`.${styles.active}`);
+        const activeElement = container?.querySelector(`.${styles.active}`);
         if (activeElement && container) {
             const offsetLeft = activeElement.offsetLeft - container.offsetWidth / 2 + activeElement.offsetWidth / 2;
             container.scrollTo({
@@ -35,23 +41,22 @@ const Navigator = ({ active, setActive, assignments }) => {
 
     // Set the closest upcoming date on initial load
     useEffect(() => {
-        if (!closestDate) { // Run this only if closestDate hasn't been set yet
+        if (!closestDate) {
             const today = new Date();
             const upcomingDates = uniqueDates.filter(date => date >= today);
             const closestUpcomingDate = upcomingDates.sort((a, b) => a - b)[0];
 
             if (closestUpcomingDate) {
                 setClosestDate(closestUpcomingDate);
-                if (closestUpcomingDate.getDate() !== active) { // Prevent unnecessary state update
+                if (closestUpcomingDate.getDate() !== active) {
                     setActive(closestUpcomingDate.getDate());
                 }
             }
         }
     }, [uniqueDates, closestDate, active, setActive]);
 
-    // Function to handle click and log the date
+    // Handle date click
     const handleDateClick = (date) => {
-        console.log(`Date clicked: ${date}`); // Log the clicked date
         setActive(parseInt(date)); // Update active state
     };
 
@@ -67,7 +72,7 @@ const Navigator = ({ active, setActive, assignments }) => {
                 gap: '30px',
                 padding: '10px',
                 scrollSnapType: 'x mandatory',
-                justifyContent: 'center' // Center align the entire navigator content
+                justifyContent: 'center',
             }}
         >
             {uniqueDates.map((date, index) => (
@@ -82,13 +87,14 @@ const Navigator = ({ active, setActive, assignments }) => {
                         scrollSnapAlign: 'center',
                         padding: '10px',
                         cursor: 'pointer',
-                        textAlign: 'center', // Center-align the text inside the item
-                        backgroundColor: active === date.getDate() ? 'black' : 'transparent', // Set background to black if active
-                        color: active === date.getDate() ? 'white' : 'inherit' // Set text color to white if active for contrast
+                        textAlign: 'center',
+                        backgroundColor: active === date.getDate() ? 'black' : 'transparent',
+                        color: active === date.getDate() ? 'white' : 'inherit',
                     }}
                 >
-                    <h4 className={styles.day}>{date.getDate()}</h4>
-                    <span className="label h6">{date.toLocaleString('default', { month: 'short' })}</span>
+                    {/* Ensure date.getDate() doesn't return NaN */}
+                    <h4 className={styles.day}>{!isNaN(date.getDate()) ? date.getDate() : 'Invalid Date'}</h4>
+                    <span className="label h6">{!isNaN(date.getDate()) ? date.toLocaleString('default', { month: 'short' }) : ''}</span>
                 </div>
             ))}
         </div>
