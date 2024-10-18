@@ -16,6 +16,24 @@ import { useMinute } from './MinuteContext';
 import EventCard from "@widgets/MatchDetailContainer/EventCard";
 import CompleteEndView from "@widgets/MatchDetailContainer/CompleteEndView";  // Import the custom hook
 
+// Add the helper functions here
+const formatDate = (dateString) => {
+    console.log('formatDate - dateString:', dateString);
+    if (!dateString) return 'Invalid Date';
+    const date = new Date(dateString);
+    console.log('formatDate - date:', date);
+    if (isNaN(date.getTime())) {
+        console.log('formatDate - date is invalid');
+        return 'Invalid Date';
+    }
+    const day = ('0' + date.getUTCDate()).slice(-2);
+    const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
+    const year = date.getUTCFullYear();
+    const hours = ('0' + date.getUTCHours()).slice(-2);
+    const minutes = ('0' + date.getUTCMinutes()).slice(-2);
+    return `${day}.${month}.${year}, ${hours}:${minutes}`;
+};
+
 const TeamCard = ({ team, isHome }) => (
     <div className={styles.cardColumn}>
         <img className={styles.clubLogo} src={team.logo || ''} alt={team.name || (isHome ? 'Home Team' : 'Away Team')} />
@@ -337,6 +355,9 @@ const RefDetailContainer = ({id}) => {
                     <div className={styles.middleCol}>
                         <Score team1={match.score?.home || 0} team2={match.score?.away || 0} variant="alt"/>
                         <p className={styles.location}>{match.details.location}</p>
+                        {/* ADD THE LOGIC HERE */}
+                        <p className={styles.date}>{formatDate(match.details.date)}</p>
+
                     </div>
                     <TeamCard team={awayTeam} isHome={false}/>
                 </div>
