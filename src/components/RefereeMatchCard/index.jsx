@@ -4,14 +4,32 @@ import styles from './styles.module.scss';
 import Spring from '@components/Spring';
 import Score from '@ui/Score';
 
-// Helper function to format the date
+// Helper functions to format the date and time separately
 const formatDate = (dateString) => {
     if (!dateString) return 'Invalid Date';
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
         return 'Invalid Date';
     }
-    return date.toISOString().split('T')[0];
+    // Use UTC methods to avoid time zone conversion
+    const day = ('0' + date.getUTCDate()).slice(-2);
+    const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
+    const year = date.getUTCFullYear();
+
+    return `${day}.${month}.${year}`;
+};
+
+const formatTime = (dateString) => {
+    if (!dateString) return 'Invalid Time';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        return 'Invalid Time';
+    }
+    // Use UTC methods to avoid time zone conversion
+    const hours = ('0' + date.getUTCHours()).slice(-2);
+    const minutes = ('0' + date.getUTCMinutes()).slice(-2);
+
+    return `${hours}:${minutes}`;
 };
 
 const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
@@ -81,8 +99,17 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
 
                     <div className="d-flex flex-column justify-content-center g-5">
                         <h4 style={{ color: "orange", textAlign: "center" }} className="text-12 text-overflow">Spielplatz:</h4>
+                        {/* Location */}
                         <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
-                            {match?.details?.location || 'Nicht Zugeornet'}, {formatDate(match?.details?.date) || 'Nicht Zugeornet'}
+                            {match?.details?.location || 'Nicht Zugeordnet'}
+                        </h2>
+                        {/* Date */}
+                        <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
+                            {formatDate(match?.details?.date) || 'Invalid Date'}
+                        </h2>
+                        {/* Time */}
+                        <h2 style={{ textAlign: "center", maxWidth: "150px", height: "auto" }} className="text-12 text-overflow">
+                            {formatTime(match?.details?.date) || 'Invalid Time'}
                         </h2>
                     </div>
 
