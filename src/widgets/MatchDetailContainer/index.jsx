@@ -18,10 +18,8 @@ import CompleteEndView from "@widgets/MatchDetailContainer/CompleteEndView";  //
 
 // Add the helper functions here
 const formatDate = (dateString) => {
-    console.log('formatDate - dateString:', dateString);
     if (!dateString) return 'Invalid Date';
     const date = new Date(dateString);
-    console.log('formatDate - date:', date);
     if (isNaN(date.getTime())) {
         console.log('formatDate - date is invalid');
         return 'Invalid Date';

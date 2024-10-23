@@ -103,14 +103,16 @@ class MatchController {
      * @param {string} number - Player's number
      * @returns {Promise<Object>} Response status
      */
-    async addGoal(matchId, playerId, scoreTeam, minute, name, image, number) {
+    async addGoal(matchId, playerId, scoreTeam, minute, name, image, number, ownGoal = false) {
         const goalData = {
             playerId,
             scoreTeam,
-            minute: parseInt(minute, 10),  // Ensure minute is an integer
+            minute,
             name,
             image,
-            number
+            number,
+            assign: scoreTeam,  // "home" or "away" based on scoreTeam
+            ownGoal               // Pass the ownGoal value
         };
         return this.apiService.post(`matches/${matchId}/goal`, goalData);
     }
@@ -290,6 +292,15 @@ class MatchController {
      * @param {string} team - The team to toggle dress for ("home" or "away")
      * @returns {Promise<Object>} Response status
      */
+
+    /**
+     *  Delete an event from a match and update the score if it's a goal
+     *  @param {string} eventId - The UUID of the event to delete
+     */
+    async deleteEvent(matchId, eventId) {
+        return this.apiService.delete(`events/${eventId}`);
+    }
+
     async toggleDress(matchId, team) {
         const toggleData = { team };
         return this.apiService.post(`matches/${matchId}/toggle`, toggleData);
