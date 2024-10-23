@@ -162,6 +162,8 @@ const RefDetailContainer = ({id}) => {
                 return "Spiel Bericht Abgesendet"
             case 'abbgebrochen':
                 return 'Spiel Abbgebrochen';
+            case 'done':
+                return 'Spiel Abgeschlossen';
             default:
                 return "Status Unbekannt";
         }

@@ -112,7 +112,7 @@ const FirstHalfView = ({ match, activeTab, setActiveTab, teamID, refetch, onPlay
 
     const handleDeleteEvent = async (eventId) => {
         try {
-            await matchController.deleteEvent(match.id, eventId);
+            await matchController.deleteEvent(eventId);
             await refetch();  // Refetch after event deletion
         } catch (error) {
             console.error('Failed to delete event:', error);

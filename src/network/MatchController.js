@@ -297,7 +297,7 @@ class MatchController {
      *  Delete an event from a match and update the score if it's a goal
      *  @param {string} eventId - The UUID of the event to delete
      */
-    async deleteEvent(matchId, eventId) {
+    async deleteEvent(eventId) {
         return this.apiService.delete(`events/${eventId}`);
     }
 
