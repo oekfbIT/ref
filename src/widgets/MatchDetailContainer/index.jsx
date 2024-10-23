@@ -408,7 +408,7 @@ const RefDetailContainer = ({id}) => {
                     <div className={styles.middleCol}>
                         <Score team1={match.score?.home || 0} team2={match.score?.away || 0} variant="alt"/>
                         <p className={styles.location}>{match.details.location}</p>
-                        <p className={styles.league}>{league.name}</p>
+                        <p className={styles.league}>{league?.name}</p>
                         {/* ADD THE LOGIC HERE */}
                         <p className={styles.date}>{formatDate(match.details.date)}</p>
 
