@@ -22,6 +22,10 @@ class MatchController {
         return this.apiService.get(`matches/${matchId}`);
     }
 
+    async getLeagueByMatchId(matchId) {
+        return this.apiService.get(`matches/league/${matchId}`);
+    }
+
     /**
      * Create a new match
      * @param {number} gameday - Gameday number
@@ -71,6 +75,24 @@ class MatchController {
     }
 
     /**
+     * Reset a game
+     * @param {string} matchId - The UUID of the match
+     * @returns {Promise<Object>} Response status
+     */
+    async resetGame(matchId) {
+        return this.apiService.get(`matches/${matchId}/resetGame`);
+    }
+
+    /**
+     * Reset halftime of a game
+     * @param {string} matchId - The UUID of the match
+     * @returns {Promise<Object>} Response status
+     */
+    async resetHalftime(matchId) {
+        return this.apiService.get(`matches/${matchId}/resetHalftime`);
+    }
+
+    /**
      * Add a goal to a match
      * @param {string} matchId - The UUID of the match
      * @param {string} playerId - UUID of the player
@@ -79,23 +101,19 @@ class MatchController {
      * @param {string} name - Name of the player
      * @param {string} image - Image URL of the player
      * @param {string} number - Player's number
-     * @param {boolean} ownGoal - Is it an own goal (true or false)
      * @returns {Promise<Object>} Response status
      */
-    async addGoal(matchId, playerId, scoreTeam, minute, name, image, number, ownGoal = false) {
+    async addGoal(matchId, playerId, scoreTeam, minute, name, image, number) {
         const goalData = {
             playerId,
             scoreTeam,
-            minute,
+            minute: parseInt(minute, 10),  // Ensure minute is an integer
             name,
             image,
-            number,
-            assign: scoreTeam,  // "home" or "away" based on scoreTeam
-            ownGoal               // Pass the ownGoal value
+            number
         };
         return this.apiService.post(`matches/${matchId}/goal`, goalData);
     }
-
 
     /**
      * Add a red card to a player in a match
@@ -106,11 +124,17 @@ class MatchController {
      * @param {string} name - Name of the player
      * @param {string} image - Image URL of the player
      * @param {string} number - Player's number
-     * @param {string} assign - Waht Team Home or Away
      * @returns {Promise<Object>} Response status
      */
-    async addRedCard(matchId, playerId, teamId, minute, name, image, number, assign) {
-        const cardData = { playerId, teamId, minute, name, image, number, assign};
+    async addRedCard(matchId, playerId, teamId, minute, name, image, number) {
+        const cardData = {
+            playerId,
+            teamId,
+            minute: parseInt(minute, 10),  // Ensure minute is an integer
+            name,
+            image,
+            number
+        };
         return this.apiService.post(`matches/${matchId}/redCard`, cardData);
     }
 
@@ -123,11 +147,17 @@ class MatchController {
      * @param {string} name - Name of the player
      * @param {string} image - Image URL of the player
      * @param {string} number - Player's number
-     * @param {string} assign - Waht Team Home or Away
      * @returns {Promise<Object>} Response status
      */
-    async addYellowCard(matchId, playerId, teamId, minute, name, image, number, assign) {
-        const cardData = { playerId, teamId, minute, name, image, number, assign };
+    async addYellowCard(matchId, playerId, teamId, minute, name, image, number) {
+        const cardData = {
+            playerId,
+            teamId,
+            minute: parseInt(minute, 10),  // Ensure minute is an integer
+            name,
+            image,
+            number
+        };
         return this.apiService.post(`matches/${matchId}/yellowCard`, cardData);
     }
 
@@ -140,11 +170,17 @@ class MatchController {
      * @param {string} name - Name of the player
      * @param {string} image - Image URL of the player
      * @param {string} number - Player's number
-     * @param {string} assign - Waht Team Home or Away
      * @returns {Promise<Object>} Response status
      */
-    async addYellowRedCard(matchId, playerId, teamId, minute, name, image, number, assign) {
-        const cardData = { playerId, teamId, minute, name, image, number, assign };
+    async addYellowRedCard(matchId, playerId, teamId, minute, name, image, number) {
+        const cardData = {
+            playerId,
+            teamId,
+            minute: parseInt(minute, 10),  // Ensure minute is an integer
+            name,
+            image,
+            number
+        };
         return this.apiService.post(`matches/${matchId}/yellowRedCard`, cardData);
     }
 
@@ -207,7 +243,7 @@ class MatchController {
     }
 
     /**
-     * Abandon a game (spielabbruch)
+     * End a game with Spielabbruch status
      * @param {string} matchId - The UUID of the match
      * @returns {Promise<Object>} Response status
      */
@@ -249,14 +285,16 @@ class MatchController {
     }
 
     /**
-     * Delete an event from a match and update the score if it's a goal
+     * Toggle the dress for a team's blanket in a match
      * @param {string} matchId - The UUID of the match
-     * @param {string} eventId - The UUID of the event to delete
+     * @param {string} team - The team to toggle dress for ("home" or "away")
      * @returns {Promise<Object>} Response status
      */
-    async deleteEvent(matchId, eventId) {
-        return this.apiService.delete(`events/${eventId}`);
+    async toggleDress(matchId, team) {
+        const toggleData = { team };
+        return this.apiService.post(`matches/${matchId}/toggle`, toggleData);
     }
+
 }
 
 export default MatchController;

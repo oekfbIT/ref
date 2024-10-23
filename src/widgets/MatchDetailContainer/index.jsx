@@ -59,6 +59,7 @@ const TrainerCard = ({ team, isHome }) => (
 
 const RefDetailContainer = ({id}) => {
     const [match, setMatch] = useState(null);
+    const [league, setLeague] = useState(null);
     const [stopwatch, setStopwatch] = useState('00:00:00');
     const [isRunning, setIsRunning] = useState(false);
     const [modalType, setModalType] = useState(null);
@@ -66,6 +67,8 @@ const RefDetailContainer = ({id}) => {
     const [noShowModalOpen, setNoShowModalOpen] = useState(false);
     const [abbruchModalOpen, setAbbruchModal] = useState(false);
     const [selectedWinner, setSelectedWinner] = useState(null);
+    const [resetModalOpen, setResetModalOpen] = useState(false);
+    const [resetHTModalOpen, setResetHTModalOpen] = useState(false);
     const { setMinute } = useMinute();  // Get the setter for the minute context
     const [activeTab, setActiveTab] = useState("home");
 
@@ -89,8 +92,23 @@ const RefDetailContainer = ({id}) => {
     };
 
     useEffect(() => {
-        fetchMatch();
-    }, [id]);
+        const fetchLeague = async (matchId) => {
+            try {
+                const response = await matchController.getLeagueByMatchId(matchId);
+                if (response) {
+                    setLeague(response);
+                }
+            } catch (error) {
+                console.error('Failed to fetch league:', error);
+            }
+        };
+
+        fetchMatch().then(() => {
+            if (match?.id) {
+                fetchLeague(match.id);
+            }
+        });
+    }, [id, match?.id]);
 
     useEffect(() => {
         let interval;
@@ -292,6 +310,42 @@ const RefDetailContainer = ({id}) => {
         }
     };
 
+    const openGameResetModal = () => {
+        setResetModalOpen(true);
+    };
+
+    const closeGameResetModal = () => {
+        setResetModalOpen(false);
+    };
+
+    const executeGameReset = async () => {
+        try {
+            await matchController.resetGame(match.id);
+            await refetchMatch();
+            closeGameResetModal();
+        } catch (error) {
+            console.error('Failed to reset game:', error);
+        }
+    };
+
+    const openHTResetModal = () => {
+        setResetHTModalOpen(true);
+    };
+
+    const closeHTResetModal = () => {
+        setResetHTModalOpen(false);
+    };
+
+    const executeHTReset = async () => {
+        try {
+            await matchController.resetHalftime(match.id);
+            await refetchMatch();
+            closeHTResetModal();
+        } catch (error) {
+            console.error('Failed to reset halftime:', error);
+        }
+    };
+
     const renderView = () => {
         switch (match?.status) {
             case 'pending':
@@ -346,7 +400,6 @@ const RefDetailContainer = ({id}) => {
 
     const teamError = renderTeamError();
 
-
     return (
         <Spring>
             <div className={styles.card}>
@@ -355,6 +408,7 @@ const RefDetailContainer = ({id}) => {
                     <div className={styles.middleCol}>
                         <Score team1={match.score?.home || 0} team2={match.score?.away || 0} variant="alt"/>
                         <p className={styles.location}>{match.details.location}</p>
+                        <p className={styles.league}>{league.name}</p>
                         {/* ADD THE LOGIC HERE */}
                         <p className={styles.date}>{formatDate(match.details.date)}</p>
 
@@ -377,7 +431,7 @@ const RefDetailContainer = ({id}) => {
             {/* Insert EventCard here */}
             <div className={styles.card}>
                 <p className={styles.title}>Spiel Events</p>
-                <EventCard events={match.events || []} matchId={match.id} refetch={refetchMatch} />
+                <EventCard events={match.events || []} matchId={match.id} refetch={refetchMatch}/>
             </div>
 
             <div className={styles.card}>
@@ -429,6 +483,26 @@ const RefDetailContainer = ({id}) => {
 
             <div className={styles.card}>
                 {renderView()}
+            </div>
+
+            <div className={styles.card}>
+                <div className="d-flex justify-content-center p-2">
+                    <button
+                        className={styles.destroy}
+                        onClick={openGameResetModal}
+                        disabled={['completed', 'submitted'].includes(match.status)}
+                    >
+                        Spiel zurücksetzen
+                    </button>
+
+                    <button
+                        className={styles.destroy}
+                        onClick={openHTResetModal}
+                        disabled={['completed', 'submitted'].includes(match.status)}
+                    >
+                        Halbzeit zurücksetzen
+                    </button>
+                </div>
             </div>
 
             <Modal open={noShowModalOpen} onClose={() => setNoShowModalOpen(false)}>
@@ -486,6 +560,48 @@ const RefDetailContainer = ({id}) => {
                             onClick={cancelHandleAbbruch}
                         >
                             Spiel Fortsetzen
+                        </button>
+                    </div>
+                </Box>
+            </Modal>
+
+            <Modal open={resetModalOpen} onClose={closeGameResetModal}>
+                <Box className={styles.modalContent}>
+                    <h4>Sind Sie sicher, dass Sie das Spiel zurücksetzen möchten?</h4>
+                    <p>Diese Aktion wird alle Spielinformationen zurücksetzen.</p>
+                    <div className={styles.grid}>
+                        <button
+                            className={styles.destroy}
+                            onClick={executeGameReset}
+                        >
+                            Spiel Zurücksetzen
+                        </button>
+                        <button
+                            className={styles.btnOrange}
+                            onClick={closeGameResetModal}
+                        >
+                            Abbrechen
+                        </button>
+                    </div>
+                </Box>
+            </Modal>
+
+            <Modal open={resetHTModalOpen} onClose={closeHTResetModal}>
+                <Box className={styles.modalContent}>
+                    <h4>Sind Sie sicher, dass Sie die Halbzeit zurücksetzen möchten?</h4>
+                    <p>Diese Aktion wird alle Halbzeitinformationen zurücksetzen.</p>
+                    <div className={styles.grid}>
+                        <button
+                            className={styles.destroy}
+                            onClick={executeHTReset}
+                        >
+                            Halbzeit Zurücksetzen
+                        </button>
+                        <button
+                            className={styles.btnOrange}
+                            onClick={closeHTResetModal}
+                        >
+                            Abbrechen
                         </button>
                     </div>
                 </Box>
