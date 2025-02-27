@@ -13,6 +13,12 @@ RUN yarn install
 # Bundle the source code inside the Docker image
 COPY . .
 
+# Build the application for production
+RUN yarn build
+
+# Use a lightweight server to serve the production build
+RUN yarn global add serve
+
 # Set the environment variable to use port 5000
 ENV PORT=6000
 
@@ -20,4 +26,4 @@ ENV PORT=6000
 EXPOSE 6000
 
 # Define the command to run the app
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build", "-l", "6000"]

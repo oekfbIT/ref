@@ -12,3 +12,4 @@ services:
     environment:
       - SKIP_PREFLIGHT_CHECK=true
       - PORT=6000
+      - DISABLE_ESLINT_PLUGIN=true
