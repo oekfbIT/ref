@@ -1,36 +1,45 @@
+import Spring from '@components/Spring';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Score from "@ui/Score";
+import CompleteEndView from "@widgets/MatchDetailContainer/CompleteEndView"; // Import the custom hook
+import EventCard from "@widgets/MatchDetailContainer/EventCard";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MatchController from '../../network/MatchController';
-import Spring from '@components/Spring';
-import styles from './styles.module.scss';
-import PregameView from './PregameView';
+import { getElapsedTime } from '../../utils/time';
 import FirstHalfView from './FirstHalfView';
 import HalfTimeView from './HalfTimeView';
-import SecondHalfView from './SecondHalfView';
-import Score from "@ui/Score";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { getElapsedTime } from '../../utils/time';
 import { useMinute } from './MinuteContext';
-import EventCard from "@widgets/MatchDetailContainer/EventCard";
-import CompleteEndView from "@widgets/MatchDetailContainer/CompleteEndView";  // Import the custom hook
+import PregameView from './PregameView';
+import SecondHalfView from './SecondHalfView';
+import styles from './styles.module.scss';
 
 // Add the helper functions here
-const formatDate = (dateString) => {
+export const formatDate = (dateString) => {
     if (!dateString) return 'Invalid Date';
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-        console.log('formatDate - date is invalid');
-        return 'Invalid Date';
-    }
-    const day = ('0' + date.getUTCDate()).slice(-2);
-    const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
-    const year = date.getUTCFullYear();
-    const hours = ('0' + date.getUTCHours()).slice(-2);
-    const minutes = ('0' + date.getUTCMinutes()).slice(-2);
-    return `${day}.${month}.${year}, ${hours}:${minutes}`;
+
+    // Remove timezone info to force local interpretation
+    const cleaned = dateString.replace(/([Zz]|[+-]\d{2}:?\d{2})$/, '');
+    const [datePart, timePart] = cleaned.split('T');
+
+    if (!datePart || !timePart) return 'Invalid Date';
+
+    const [year, month, day] = datePart.split('-').map(Number);
+    const [hour = 0, minute = 0] = timePart.split(':').map(Number);
+
+    const date = new Date(year, month - 1, day, hour, minute);
+
+    const dd = ('0' + date.getDate()).slice(-2);
+    const mm = ('0' + (date.getMonth() + 1)).slice(-2);
+    const yyyy = date.getFullYear();
+    const hh = ('0' + date.getHours()).slice(-2);
+    const min = ('0' + date.getMinutes()).slice(-2);
+
+    return `${dd}.${mm}.${yyyy}, ${hh}:${min}`;
 };
+
+
 
 const TeamCard = ({ team, isHome }) => (
     <div className={styles.cardColumn}>
