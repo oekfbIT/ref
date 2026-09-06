@@ -4,11 +4,12 @@ FROM node:18-alpine
 # Set the working directory in the Docker container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (or yarn.lock) to the container working directory
-COPY package*.json ./
+# Copy the manifest and Yarn lockfile before installing. The lockfile keeps the
+# deployment on the Node 18-compatible dependency versions used by this app.
+COPY package.json yarn.lock ./
 
-# Install project dependencies using npm
-RUN yarn install
+# Install exactly the dependency versions recorded in yarn.lock.
+RUN yarn install --frozen-lockfile
 
 # Bundle the source code inside the Docker image
 COPY . .
