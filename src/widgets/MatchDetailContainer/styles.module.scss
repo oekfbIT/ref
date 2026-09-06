@@ -231,7 +231,9 @@ h4 {
 .modalContent {
     width: 90%;
     max-width: 500px; /* Increased width for better layout */
-    max-height: 80vh;
+    max-height: 90vh;
+    max-height: 90dvh;
+    box-sizing: border-box;
     color: white;
     position: absolute;
     top: 50%;
@@ -248,6 +250,32 @@ h4 {
     /* Remove align-items: center to allow stretching */
     /* align-items: center; */
     overflow: hidden; /* Prevent outer scrolling */
+}
+
+/* The goal flow has a persistent action area: only its selection content scrolls. */
+.goalModalContent {
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    gap: 16px;
+}
+
+.goalModalHeader {
+    flex: 0 0 auto;
+    background-color: black;
+    padding: 10px;
+}
+
+.goalModalBody {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+.goalConfirmButton {
+    flex: 0 0 auto;
+    width: calc(100% - 20px);
+    margin: 0 10px;
 }
 
 .location {
@@ -491,4 +519,3 @@ h4 {
     border-radius: 5px;
     margin: 0px 10px;
 }
-

@@ -68,10 +68,10 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
 
     return (
         <Modal open={open} onClose={handleModalClose}>
-            <Box className={styles.modalContent}>
+            <Box className={`${styles.modalContent} ${styles.goalModalContent}`}>
                 {step === 1 && (
                     <>
-                        <div style={{ backgroundColor: "black", padding: '10px' }}>
+                        <div className={styles.goalModalHeader}>
                             {/* Closing Button */}
                             <button
                                 style={{ marginBottom: "30px", color: 'white', background: 'transparent', border: 'none', cursor: 'pointer' }}
@@ -115,7 +115,8 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                             </button>
                         </div>
 
-                        <h3 style={{ fontSize: "24px", color: "white" }}>Wer bekommt das Tor?</h3>
+                        <div className={styles.goalModalBody}>
+                            <h3 style={{ fontSize: "24px", color: "white" }}>Wer bekommt das Tor?</h3>
 
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '50px', width: "70%" }}>
@@ -178,9 +179,10 @@ const GoalModal = ({ open, onClose, onConfirm, players = [], match }) => {
                                 Eigentor
                             </label>
                         </div>
+                        </div>
 
                         <button
-                            className={styles.btnOrange}
+                            className={`${styles.btnOrange} ${styles.goalConfirmButton}`}
                             onClick={handleConfirm}
                             disabled={!selectedTeam}
                         >

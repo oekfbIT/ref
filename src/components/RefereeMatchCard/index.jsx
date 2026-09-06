@@ -56,6 +56,10 @@ const RefereeMatchCard = ({ match, index, variant = 'basic' }) => {
                 return "Spiel Eingereicht";
             case 'done':
                 return "Spiel Abgeschlossen und Verrechnet";
+            case 'cancelled':
+                return "Spiel Abgesagt";
+            case 'abbgebrochen':
+                return "Spiel Abgebrochen";
             default:
                 return "Status Unbekannt";
         }

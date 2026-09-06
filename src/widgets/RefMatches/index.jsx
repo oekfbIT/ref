@@ -17,9 +17,16 @@ import { useThemeProvider } from '@contexts/themeContext';
 // Utils
 import dayjs from 'dayjs';
 
+const HIDDEN_STATUSES = new Set(['submitted', 'done']);
+
+const getDateKey = (dateString) => {
+    const date = new Date(dateString);
+    return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
+};
+
 const RefMatches = () => {
     const { direction } = useThemeProvider();
-    const [selectedDay, setSelectedDay] = useState(parseInt(dayjs().format('DD')));
+    const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD'));
     const [matches, setMatches] = useState([]);
 
     useEffect(() => {
@@ -41,16 +48,11 @@ const RefMatches = () => {
         fetchMatches();
     }, []); // Empty dependency array ensures this effect runs once
 
-    // Filter matches based on the selected day and exclude completed or cancelled matches
+    // Keep the navigator and the cards in sync: both use the full UTC date and
+    // only include matches that have not been submitted or settled.
     const filteredMatches = matches
         .filter(match => {
-            const matchDate = new Date(match.details.date);
-            return (
-                matchDate.getDate() === selectedDay &&
-                match.status !== 'submitted' &&
-                match.status !== 'done' &&
-                match.status !== 'cancelled'
-            );
+            return getDateKey(match?.details?.date) === selectedDate && !HIDDEN_STATUSES.has(match.status);
         })
         .sort((a, b) => {
             // Sort by time (earliest to latest)
@@ -62,7 +64,11 @@ const RefMatches = () => {
     return (
         <Spring className="card d-flex flex-column">
             <div className="card_header d-flex flex-column g-10" style={{ paddingBottom: 10}}>
-                <Navigator active={selectedDay} setActive={setSelectedDay} assignments={matches} />
+                <Navigator
+                    active={selectedDate}
+                    setActive={setSelectedDate}
+                    assignments={matches.filter(match => !HIDDEN_STATUSES.has(match.status))}
+                />
             </div>
             <div className={styles.grid}>
                 <div className={styles.scroll}>

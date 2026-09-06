@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import classNames from 'classnames';
 import styles from './styles.module.scss';
 import { useThemeProvider } from '@contexts/themeContext';
@@ -10,20 +10,20 @@ const formatDate = (dateString) => {
     if (isNaN(date.getTime())) {
         return 'Invalid Date';
     }
-    return date.toISOString().split('T')[0]; // Return 'YYYY-MM-DD'
+    return date.toISOString().split('T')[0]; // Return a stable UTC YYYY-MM-DD key
 };
 
 const Navigator = ({ active, setActive, assignments }) => {
     const { theme, direction } = useThemeProvider();
     const containerRef = useRef(null);
-    const [closestDate, setClosestDate] = useState(null);
-
-    // Extract unique dates from the assignments
+    // Extract and order the unique full dates. Using the full date prevents a
+    // 6 September from one year being grouped with 6 September from another.
     const uniqueDates = useMemo(() => {
-        const dateStrings = assignments.map(assignment => {
-            return formatDate(assignment.details.date);
-        });
-        return [...new Set(dateStrings)].map(dateString => new Date(dateString));
+        const dateStrings = assignments
+            .map(assignment => formatDate(assignment?.details?.date))
+            .filter(date => date !== 'Invalid Date');
+
+        return [...new Set(dateStrings)].sort();
     }, [assignments]);
 
     // Scroll to the active date
@@ -39,25 +39,21 @@ const Navigator = ({ active, setActive, assignments }) => {
         }
     }, [active]);
 
-    // Set the closest upcoming date on initial load
+    // Select the closest upcoming actionable date, or the latest actionable
+    // date when there are no upcoming assignments.
     useEffect(() => {
-        if (!closestDate) {
-            const today = new Date();
-            const upcomingDates = uniqueDates.filter(date => date >= today);
-            const closestUpcomingDate = upcomingDates.sort((a, b) => a - b)[0];
+        if (uniqueDates.length === 0 || uniqueDates.includes(active)) return;
 
-            if (closestUpcomingDate) {
-                setClosestDate(closestUpcomingDate);
-                if (closestUpcomingDate.getDate() !== active) {
-                    setActive(closestUpcomingDate.getDate());
-                }
-            }
+        const today = formatDate(new Date());
+        const nextDate = uniqueDates.find(date => date >= today) || uniqueDates[uniqueDates.length - 1];
+        if (nextDate !== active) {
+            setActive(nextDate);
         }
-    }, [uniqueDates, closestDate, active, setActive]);
+    }, [uniqueDates, active, setActive]);
 
     // Handle date click
-    const handleDateClick = (date) => {
-        setActive(parseInt(date)); // Update active state
+    const handleDateClick = (dateKey) => {
+        setActive(dateKey);
     };
 
     return (
@@ -75,28 +71,34 @@ const Navigator = ({ active, setActive, assignments }) => {
                 justifyContent: 'center',
             }}
         >
-            {uniqueDates.map((date, index) => (
+            {uniqueDates.map((dateKey) => {
+                const date = new Date(`${dateKey}T00:00:00Z`);
+                const isActive = active === dateKey;
+
+                return (
                 <div
-                    key={index}
+                    key={dateKey}
                     className={classNames(styles.slide, styles.navigator_item, styles[direction], {
-                        [styles.active]: active === date.getDate(),
+                        [styles.active]: isActive,
                     })}
-                    onClick={() => handleDateClick(date.getDate())}
+                    onClick={() => handleDateClick(dateKey)}
                     style={{
                         display: 'inline-block',
                         scrollSnapAlign: 'center',
                         padding: '10px',
                         cursor: 'pointer',
                         textAlign: 'center',
-                        backgroundColor: active === date.getDate() ? 'black' : 'transparent',
-                        color: active === date.getDate() ? 'white' : 'inherit',
+                        backgroundColor: isActive ? 'black' : 'transparent',
+                        color: isActive ? 'white' : 'inherit',
                     }}
                 >
-                    {/* Ensure date.getDate() doesn't return NaN */}
-                    <h4 className={styles.day}>{!isNaN(date.getDate()) ? date.getDate() : 'Invalid Date'}</h4>
-                    <span className="label h6">{!isNaN(date.getDate()) ? date.toLocaleString('default', { month: 'short' }) : ''}</span>
+                    <h4 className={styles.day}>{date.getUTCDate()}</h4>
+                    <span className="label h6">
+                        {date.toLocaleString('default', { month: 'short', timeZone: 'UTC' })} {date.getUTCFullYear()}
+                    </span>
                 </div>
-            ))}
+                );
+            })}
         </div>
     );
 };
