@@ -39,13 +39,12 @@ const Navigator = ({ active, setActive, assignments }) => {
         }
     }, [active]);
 
-    // Select the closest upcoming actionable date, or the latest actionable
-    // date when there are no upcoming assignments.
+    // Select the closest actionable date. RefMatches supplies only today and
+    // future assignments, so a past date can never be selected as a fallback.
     useEffect(() => {
         if (uniqueDates.length === 0 || uniqueDates.includes(active)) return;
 
-        const today = formatDate(new Date());
-        const nextDate = uniqueDates.find(date => date >= today) || uniqueDates[uniqueDates.length - 1];
+        const nextDate = uniqueDates[0];
         if (nextDate !== active) {
             setActive(nextDate);
         }

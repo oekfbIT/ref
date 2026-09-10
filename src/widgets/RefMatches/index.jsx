@@ -15,18 +15,18 @@ import RefereeMatchCard from "@components/RefereeMatchCard";
 import { useThemeProvider } from '@contexts/themeContext';
 
 // Utils
-import dayjs from 'dayjs';
-
-const HIDDEN_STATUSES = new Set(['submitted', 'done']);
+const VISIBLE_STATUSES = new Set(['pending', 'first', 'halftime', 'second']);
 
 const getDateKey = (dateString) => {
     const date = new Date(dateString);
     return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
 };
 
+const getTodayDateKey = () => new Date().toISOString().slice(0, 10);
+
 const RefMatches = () => {
     const { direction } = useThemeProvider();
-    const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD'));
+    const [selectedDate, setSelectedDate] = useState(getTodayDateKey);
     const [matches, setMatches] = useState([]);
 
     useEffect(() => {
@@ -48,11 +48,16 @@ const RefMatches = () => {
         fetchMatches();
     }, []); // Empty dependency array ensures this effect runs once
 
-    // Keep the navigator and the cards in sync: both use the full UTC date and
-    // only include matches that have not been submitted or settled.
-    const filteredMatches = matches
+    // A referee sees only scheduled or live matches on today or a future date.
+    // This single list supplies both the date navigator and the cards.
+    const visibleMatches = matches.filter(match => {
+        const dateKey = getDateKey(match?.details?.date);
+        return dateKey !== null && dateKey >= getTodayDateKey() && VISIBLE_STATUSES.has(match.status);
+    });
+
+    const filteredMatches = visibleMatches
         .filter(match => {
-            return getDateKey(match?.details?.date) === selectedDate && !HIDDEN_STATUSES.has(match.status);
+            return getDateKey(match?.details?.date) === selectedDate;
         })
         .sort((a, b) => {
             // Sort by time (earliest to latest)
@@ -67,7 +72,7 @@ const RefMatches = () => {
                 <Navigator
                     active={selectedDate}
                     setActive={setSelectedDate}
-                    assignments={matches.filter(match => !HIDDEN_STATUSES.has(match.status))}
+                    assignments={visibleMatches}
                 />
             </div>
             <div className={styles.grid}>
