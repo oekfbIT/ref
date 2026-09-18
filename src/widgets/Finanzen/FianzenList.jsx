@@ -16,7 +16,7 @@ const RechnungList = () => {
                 const authToken = authService.getAuthToken();
 
                 if (refID && authToken) {
-                    const response = await apiService.get(`referees/${refID}`);
+                    const response = await apiService.get('app/referee/me');
                     setTeam(response);
                 } else {
                     console.error('TeamID or AuthToken is missing.');

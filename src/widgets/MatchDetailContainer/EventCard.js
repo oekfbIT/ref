@@ -25,7 +25,7 @@ const EventCard = ({ events, matchId, refetch }) => {
     const handleConfirmDelete = async () => {
         if (deleteEventId) {
             try {
-                await matchController.deleteEvent(deleteEventId);  // Use matchId
+                await matchController.deleteEvent(matchId, deleteEventId);
                 await refetch();  // Refetch match data after deleting the event
                 handleCloseModal(); // Close the modal after success
             } catch (error) {

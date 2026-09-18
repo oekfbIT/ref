@@ -1,11 +1,11 @@
 class AuthService {
   constructor() {
-    this.baseURL = "https://api.oekfb.eu";
-    // this.baseURL = "http://localhost:8080";
+    this.baseURL = (process.env.REACT_APP_API_BASE_URL || "https://api.oekfb.eu")
+      .replace(/\/+$/, "");
   }
 
   async login(email, password) {
-    const url = `${this.baseURL}/users/login`;
+    const url = `${this.baseURL}/app/auth/login`;
     const base64Credentials = btoa(`${email}:${password}`);
 
     try {
@@ -20,7 +20,6 @@ class AuthService {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Login response data:", data); // Add this to check the response
         const token = data.token;
 
         if (!token) {
@@ -31,17 +30,16 @@ class AuthService {
           };
         }
 
-        if (data.user.type != "referee") {
+        if (data.user.type !== "referee") {
           return {
             success: false,
-            message: `Dieser User ist kein Schiedrichter sondern ${data.user.type}\`.`,
+            message: `Dieser User ist kein Schiedsrichter, sondern ${data.user.type}.`,
           };
         }
 
-        const userId = data.user.id;
-
-        // Fetch the full user data to get the ref information
-        const fullUserData = await this.fetchUserData(userId, token);
+        // Resolve the referee profile from the authenticated token. The API does
+        // not accept a caller-provided referee id here.
+        const fullUserData = await this.fetchUserData(token);
         if (fullUserData && fullUserData.assignments) {
           const refID = fullUserData.id;
 
@@ -53,7 +51,7 @@ class AuthService {
             7 * 24 * 60 * 60
           }; secure; samesite=strict`;
 
-          return { success: true, user: fullUserData.user };
+          return { success: true, user: data.user, referee: fullUserData };
         } else {
           return {
             success: false,
@@ -62,7 +60,10 @@ class AuthService {
         }
       } else {
         const errorData = await response.json();
-        return { success: false, message: errorData.message || "Login failed" };
+        return {
+          success: false,
+          message: errorData.reason || errorData.message || "Login failed",
+        };
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -70,10 +71,10 @@ class AuthService {
     }
   }
 
-  async fetchUserData(userId, token) {
+  async fetchUserData(token) {
     try {
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await fetch(`${this.baseURL}/referees/user/${userId}`, {
+      const response = await fetch(`${this.baseURL}/app/referee/me`, {
         headers,
       });
       if (response.ok) {

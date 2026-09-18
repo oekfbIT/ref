@@ -32,11 +32,10 @@ const RefMatches = () => {
     useEffect(() => {
         const fetchMatches = async () => {
             try {
-                const refID = new AuthService().getRefID();
-                if (!refID) return;
+                const authToken = new AuthService().getAuthToken();
+                if (!authToken) return;
 
-                const response = await new ApiService().get(`referees/${refID}`);
-                console.log('Fetched matches:', response);
+                const response = await new ApiService().get('app/referee/me');
                 if (response && response.assignments) {
                     setMatches(response.assignments);
                 }

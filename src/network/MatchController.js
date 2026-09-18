@@ -10,7 +10,8 @@ class MatchController {
      * @returns {Promise<Object[]>} Array of match objects
      */
     async getAllMatches() {
-        return this.apiService.get('matches');
+        const profile = await this.apiService.get('app/referee/me');
+        return profile?.assignments || [];
     }
 
     /**
@@ -19,59 +20,11 @@ class MatchController {
      * @returns {Promise<Object>} Match object
      */
     async getMatchById(matchId) {
-        return this.apiService.get(`matches/${matchId}`);
+        return this.apiService.get(`app/match/${matchId}`);
     }
 
     async getLeagueByMatchId(matchId) {
-        return this.apiService.get(`matches/league/${matchId}`);
-    }
-
-    /**
-     * Create a new match
-     * @param {number} gameday - Gameday number
-     * @param {string} date - Date of the match in ISO string format
-     * @param {string} stadium - UUID of the stadium
-     * @param {string} location - Location of the match
-     * @param {string} homeTeamId - UUID of the home team
-     * @param {string} awayTeamId - UUID of the away team
-     * @param {Object|null} homeBlanket - Home blanket data (nullable)
-     * @param {Object|null} awayBlanket - Away blanket data (nullable)
-     * @param {Object} score - Initial score (home and away)
-     * @param {string} status - Match status
-     * @returns {Promise<Object>} Created match object
-     */
-    async createMatch(gameday, date, stadium, location, homeTeamId, awayTeamId, homeBlanket = null, awayBlanket = null, score, status) {
-        const matchData = {
-            details: { gameday, date, stadium, location },
-            homeTeamId,
-            awayTeamId,
-            homeBlanket,
-            awayBlanket,
-            score,
-            status
-        };
-        return this.apiService.post('matches', matchData);
-    }
-
-    /**
-     * Update a match by ID
-     * @param {string} matchId - The UUID of the match
-     * @param {Object} score - Updated score (home and away)
-     * @param {string} status - Updated match status
-     * @returns {Promise<Object>} Updated match object
-     */
-    async updateMatch(matchId, score, status) {
-        const matchData = { score, status };
-        return this.apiService.patch(`matches/${matchId}`, matchData);
-    }
-
-    /**
-     * Delete a match by ID
-     * @param {string} matchId - The UUID of the match
-     * @returns {Promise<void>}
-     */
-    async deleteMatch(matchId) {
-        return this.apiService.delete(`matches/${matchId}`);
+        return this.apiService.get(`app/match/${matchId}/league`);
     }
 
     /**
@@ -80,7 +33,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async resetGame(matchId) {
-        return this.apiService.get(`matches/${matchId}/resetGame`);
+        return this.apiService.get(`app/match/${matchId}/resetGame`);
     }
 
     /**
@@ -89,7 +42,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async resetHalftime(matchId) {
-        return this.apiService.get(`matches/${matchId}/resetHalftime`);
+        return this.apiService.get(`app/match/${matchId}/resetHalftime`);
     }
 
     /**
@@ -114,7 +67,7 @@ class MatchController {
             assign: scoreTeam,  // "home" or "away" based on scoreTeam
             ownGoal               // Pass the ownGoal value
         };
-        return this.apiService.post(`matches/${matchId}/goal`, goalData);
+        return this.apiService.post(`app/match/${matchId}/goal`, goalData);
     }
 
     /**
@@ -137,7 +90,7 @@ class MatchController {
             image,
             number
         };
-        return this.apiService.post(`matches/${matchId}/redCard`, cardData);
+        return this.apiService.post(`app/match/${matchId}/redCard`, cardData);
     }
 
     /**
@@ -160,7 +113,7 @@ class MatchController {
             image,
             number
         };
-        return this.apiService.post(`matches/${matchId}/yellowCard`, cardData);
+        return this.apiService.post(`app/match/${matchId}/yellowCard`, cardData);
     }
 
     /**
@@ -183,7 +136,7 @@ class MatchController {
             image,
             number
         };
-        return this.apiService.post(`matches/${matchId}/yellowRedCard`, cardData);
+        return this.apiService.post(`app/match/${matchId}/yellowRedCard`, cardData);
     }
 
     /**
@@ -194,7 +147,7 @@ class MatchController {
      */
     async addPlayersToHomeBlanket(matchId, playerIds, coach) {
         const playerData = { playerIds, coach };
-        return this.apiService.post(`matches/${matchId}/homeBlanket/addPlayers`, playerData);
+        return this.apiService.post(`app/match/${matchId}/homeBlankett/addPlayer`, playerData);
     }
 
     /**
@@ -205,7 +158,7 @@ class MatchController {
      */
     async addPlayersToAwayBlanket(matchId, playerIds, coach) {
         const playerData = { playerIds, coach };
-        return this.apiService.post(`matches/${matchId}/awayBlanket/addPlayers`, playerData);
+        return this.apiService.post(`app/match/${matchId}/awayBlankett/addPlayer`, playerData);
     }
 
     /**
@@ -214,7 +167,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async startGame(matchId) {
-        return this.apiService.patch(`matches/${matchId}/startGame`);
+        return this.apiService.patch(`app/match/${matchId}/startGame`);
     }
 
     /**
@@ -223,7 +176,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async endFirstHalf(matchId) {
-        return this.apiService.patch(`matches/${matchId}/endFirstHalf`);
+        return this.apiService.patch(`app/match/${matchId}/endFirstHalf`);
     }
 
     /**
@@ -232,7 +185,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async startSecondHalf(matchId) {
-        return this.apiService.patch(`matches/${matchId}/startSecondHalf`);
+        return this.apiService.patch(`app/match/${matchId}/startSecondHalf`);
     }
 
     /**
@@ -241,7 +194,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async endGame(matchId) {
-        return this.apiService.patch(`matches/${matchId}/endGame`);
+        return this.apiService.patch(`app/match/${matchId}/endGame`);
     }
 
     /**
@@ -250,7 +203,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async spielAbbruch(matchId) {
-        return this.apiService.patch(`matches/${matchId}/spielabbruch`);
+        return this.apiService.patch(`app/match/${matchId}/spielabbruch`);
     }
 
     /**
@@ -259,7 +212,7 @@ class MatchController {
      * @returns {Promise<Object>} Response status
      */
     async done(matchId) {
-        return this.apiService.patch(`matches/${matchId}/done`);
+        return this.apiService.patch(`app/match/${matchId}/done`);
     }
 
     /**
@@ -272,7 +225,7 @@ class MatchController {
         const submitData = {
             text
         };
-        return this.apiService.patch(`matches/${matchId}/submit`, submitData);
+        return this.apiService.patch(`app/match/${matchId}/submit`, submitData);
     }
 
     /**
@@ -283,7 +236,7 @@ class MatchController {
      */
     async noShowGame(matchId, winningTeam) {
         const noShowData = { winningTeam };
-        return this.apiService.patch(`matches/${matchId}/noShowGame`, noShowData);
+        return this.apiService.patch(`app/match/${matchId}/noShowGame`, noShowData);
     }
 
     /**
@@ -295,15 +248,16 @@ class MatchController {
 
     /**
      *  Delete an event from a match and update the score if it's a goal
+     *  @param {string} matchId - The UUID of the containing match
      *  @param {string} eventId - The UUID of the event to delete
      */
-    async deleteEvent(eventId) {
-        return this.apiService.delete(`events/${eventId}`);
+    async deleteEvent(matchId, eventId) {
+        return this.apiService.delete(`app/match/${matchId}/event/${eventId}`);
     }
 
     async toggleDress(matchId, team) {
         const toggleData = { team };
-        return this.apiService.post(`matches/${matchId}/toggle`, toggleData);
+        return this.apiService.post(`app/match/${matchId}/toggle`, toggleData);
     }
 
 }

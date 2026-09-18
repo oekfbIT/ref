@@ -1,85 +1,73 @@
 class ApiService {
   constructor() {
-    this.baseURL = "https://api.oekfb.eu/";
-    // this.baseURL = "http://localhost:8080";
+    this.baseURL = (process.env.REACT_APP_API_BASE_URL || "https://api.oekfb.eu")
+      .replace(/\/+$/, "");
+  }
+
+  getCookie(name) {
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = document.cookie.match(new RegExp(`(?:^|; )${escapedName}=([^;]*)`));
+    return match ? decodeURIComponent(match[1]) : null;
   }
 
   async request(method, endpoint, body = null, headers = {}) {
-    const url = `${this.baseURL}/${endpoint}`;
+    const normalizedEndpoint = String(endpoint).replace(/^\/+/, "");
+    const token = this.getCookie("authToken");
+    const url = `${this.baseURL}/${normalizedEndpoint}`;
     const options = {
       method,
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json",
+        ...(body !== null ? { "Content-Type": "application/json" } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
-      credentials: "include",
     };
 
-    if (body) {
+    if (body !== null) {
       options.body = JSON.stringify(body);
     }
 
-    // Debugging log to print the request details
-    console.log(`Request Method: ${method}`);
-    console.log(`Request URL: ${url}`);
-    if (body) {
-      console.log("Request Body:", JSON.stringify(body, null, 2));
-    }
-    console.log("Request Headers:", JSON.stringify(options.headers, null, 2));
+    const response = await fetch(url, options);
+    const text = await response.text();
+    let payload = null;
 
-    try {
-      const response = await fetch(url, options);
-      const text = await response.text();
-
-      if (response.ok) {
-        try {
-          const jsonResponse = JSON.parse(text);
-          console.log("Response:", JSON.stringify(jsonResponse, null, 2));
-          return jsonResponse;
-        } catch (e) {
-          console.log("Response:", text);
-          return text; // Return as text if it's not valid JSON
-        }
-      } else {
-        const errorData = JSON.parse(text);
-        console.log("Response Error:", JSON.stringify(errorData, null, 2));
-        throw new Error(errorData.message || "Request failed");
+    if (text) {
+      try {
+        payload = JSON.parse(text);
+      } catch (_) {
+        payload = text;
       }
-    } catch (error) {
-      console.error(`Error with ${method} request to ${endpoint}:`, error);
+    }
+
+    if (!response.ok) {
+      const message = typeof payload === "object" && payload?.reason
+        ? payload.reason
+        : typeof payload === "object" && payload?.message
+          ? payload.message
+          : `Request failed (${response.status})`;
+      const error = new Error(message);
+      error.status = response.status;
       throw error;
     }
+
+    return payload;
   }
 
-  async get(endpoint, headers = {}) {
-    console.log(`GET Request to: ${endpoint}`);
-    const response = await this.request("GET", endpoint, null, headers);
-    console.log("Response:", JSON.stringify(response, null, 2));
-    return response;
+  get(endpoint, headers = {}) {
+    return this.request("GET", endpoint, null, headers);
   }
 
-  async post(endpoint, body, headers = {}) {
-    console.log(`POST Request to: ${endpoint}`);
-    console.log("Request Body:", JSON.stringify(body, null, 2));
-    const response = await this.request("POST", endpoint, body, headers);
-    console.log("Response:", JSON.stringify(response, null, 2));
-    return response;
+  post(endpoint, body, headers = {}) {
+    return this.request("POST", endpoint, body, headers);
   }
 
-  async patch(endpoint, body, headers = {}) {
-    console.log(`PATCH Request to: ${endpoint}`);
-    console.log("Request Body:", JSON.stringify(body, null, 2));
-    const response = await this.request("PATCH", endpoint, body, headers);
-    console.log("Response:", JSON.stringify(response, null, 2));
-    return response;
+  patch(endpoint, body = null, headers = {}) {
+    return this.request("PATCH", endpoint, body, headers);
   }
 
-  async delete(endpoint, headers = {}) {
-    console.log(`DELETE Request to: ${endpoint}`);
-    const response = await this.request("DELETE", endpoint, null, headers);
-    console.log("Response:", JSON.stringify(response, null, 2));
-    return response;
+  delete(endpoint, headers = {}) {
+    return this.request("DELETE", endpoint, null, headers);
   }
 }
 
