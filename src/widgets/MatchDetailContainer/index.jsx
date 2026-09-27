@@ -247,7 +247,9 @@ const RefDetailContainer = ({id}) => {
 
     const getActiveTeamId = () => {
         if (!match) return null;
-        return activeTab === 'home' ? match.home_team?.id : match.away_team?.id;
+        return activeTab === 'home'
+            ? (match.home?.id ?? match.home_team?.id)
+            : (match.away?.id ?? match.away_team?.id);
     };
 
     const handleAction = async () => {
