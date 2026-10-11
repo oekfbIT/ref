@@ -22,6 +22,7 @@ class ApiService {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
+      credentials: "include",
     };
 
     if (body !== null) {

@@ -44,12 +44,13 @@ class AuthService {
           const refID = fullUserData.id;
 
           // Set cookies for refID and token
+          const secureCookie = window.location.protocol === "https:" ? "; secure" : "";
           document.cookie = `refID=${refID}; path=/; max-age=${
             7 * 24 * 60 * 60
-          }; secure; samesite=strict`;
-          document.cookie = `authToken=${token}; path=/; max-age=${
+          }${secureCookie}; samesite=strict`;
+          document.cookie = `authToken=${encodeURIComponent(token)}; path=/; max-age=${
             7 * 24 * 60 * 60
-          }; secure; samesite=strict`;
+          }${secureCookie}; samesite=strict`;
 
           return { success: true, user: data.user, referee: fullUserData };
         } else {
@@ -92,7 +93,7 @@ class AuthService {
     const match = document.cookie.match(
       new RegExp("(^| )" + name + "=([^;]+)")
     );
-    if (match) return match[2];
+    if (match) return decodeURIComponent(match[2]);
     return null;
   }
 

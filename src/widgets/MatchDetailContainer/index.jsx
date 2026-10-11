@@ -76,6 +76,7 @@ const RefDetailContainer = ({id}) => {
     const [selectedWinner, setSelectedWinner] = useState(null);
     const [resetModalOpen, setResetModalOpen] = useState(false);
     const [resetHTModalOpen, setResetHTModalOpen] = useState(false);
+    const [resetting, setResetting] = useState(false);
     const { setMinute } = useMinute();  // Get the setter for the minute context
     const [activeTab, setActiveTab] = useState("home");
 
@@ -330,12 +331,17 @@ const RefDetailContainer = ({id}) => {
     };
 
     const executeGameReset = async () => {
+        if (resetting) return;
+        setResetting(true);
         try {
             await matchController.resetGame(match.id);
             await refetchMatch();
             closeGameResetModal();
         } catch (error) {
             console.error('Failed to reset game:', error);
+            window.alert(error.message || 'Das Spiel konnte nicht zurückgesetzt werden.');
+        } finally {
+            setResetting(false);
         }
     };
 
@@ -348,12 +354,17 @@ const RefDetailContainer = ({id}) => {
     };
 
     const executeHTReset = async () => {
+        if (resetting) return;
+        setResetting(true);
         try {
             await matchController.resetHalftime(match.id);
             await refetchMatch();
             closeHTResetModal();
         } catch (error) {
             console.error('Failed to reset halftime:', error);
+            window.alert(error.message || 'Die Halbzeit konnte nicht zurückgesetzt werden.');
+        } finally {
+            setResetting(false);
         }
     };
 
@@ -501,7 +512,7 @@ const RefDetailContainer = ({id}) => {
                     <button
                         className={styles.destroy}
                         onClick={openGameResetModal}
-                        disabled={['completed', 'submitted'].includes(match.status)}
+                        type="button"
                     >
                         Spiel zurücksetzen
                     </button>
@@ -509,7 +520,7 @@ const RefDetailContainer = ({id}) => {
                     <button
                         className={styles.destroy}
                         onClick={openHTResetModal}
-                        disabled={['completed', 'submitted'].includes(match.status)}
+                        type="button"
                     >
                         Halbzeit zurücksetzen
                     </button>
@@ -584,8 +595,10 @@ const RefDetailContainer = ({id}) => {
                         <button
                             className={styles.destroy}
                             onClick={executeGameReset}
+                            disabled={resetting}
+                            type="button"
                         >
-                            Spiel Zurücksetzen
+                            {resetting ? 'Wird zurückgesetzt...' : 'Spiel Zurücksetzen'}
                         </button>
                         <button
                             className={styles.btnOrange}
@@ -605,8 +618,10 @@ const RefDetailContainer = ({id}) => {
                         <button
                             className={styles.destroy}
                             onClick={executeHTReset}
+                            disabled={resetting}
+                            type="button"
                         >
-                            Halbzeit Zurücksetzen
+                            {resetting ? 'Wird zurückgesetzt...' : 'Halbzeit Zurücksetzen'}
                         </button>
                         <button
                             className={styles.btnOrange}
